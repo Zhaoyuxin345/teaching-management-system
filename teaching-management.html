@@ -1,0 +1,3237 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' file:; img-src 'self' data: file:;">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>培训机构教务管理系统</title>
+
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src 'self' data:;">
+
+
+
+<style>
+
+:root {
+
+  --primary: #2563eb;
+
+  --primary-light: #3b82f6;
+
+  --primary-dark: #1d4ed8;
+
+  --sidebar-bg: #0f172a;
+
+  --sidebar-hover: #1e293b;
+
+  --sidebar-active: #1e3a5f;
+
+  --bg: #f1f5f9;
+
+  --card-bg: #ffffff;
+
+  --text: #1e293b;
+
+  --text-secondary: #64748b;
+
+  --text-light: #94a3b8;
+
+  --border: #e2e8f0;
+
+  --danger: #ef4444;
+
+  --success: #22c55e;
+
+  --warning: #f59e0b;
+
+  --info: #3b82f6;
+
+  --radius: 6px;
+
+  --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+
+  --shadow-lg: 0 4px 12px rgba(0,0,0,0.1);
+
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif; background: var(--bg); color: var(--text); font-size: 14px; overflow: hidden; height: 100vh; }
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+
+::-webkit-scrollbar-track { background: transparent; }
+
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+
+::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+.app { display: flex; height: 100vh; }
+
+.sidebar { width: 220px; min-width: 220px; background: var(--sidebar-bg); display: flex; flex-direction: column; overflow: hidden; }
+
+.sidebar-header { padding: 20px 16px 16px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+
+.sidebar-header h1 { color: #fff; font-size: 17px; font-weight: 700; letter-spacing: 0.3px; }
+
+.sidebar-header p { color: var(--text-light); font-size: 12px; margin-top: 2px; }
+
+.sidebar-nav { flex: 1; overflow-y: auto; padding: 8px 0; }
+
+.nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 16px; color: #94a3b8; cursor: pointer; transition: all 0.15s; font-size: 13.5px; border-left: 3px solid transparent; }
+
+.nav-item:hover { background: var(--sidebar-hover); color: #e2e8f0; }
+
+.nav-item.active { background: var(--sidebar-active); color: #fff; border-left-color: var(--primary-light); }
+
+.nav-item svg { width: 18px; height: 18px; flex-shrink: 0; }
+
+.nav-item .badge { margin-left: auto; background: var(--primary); color: #fff; font-size: 11px; padding: 1px 7px; border-radius: 10px; }
+
+.sidebar-footer { padding: 12px 16px; border-top: 1px solid rgba(255,255,255,0.08); }
+
+.sidebar-footer .status { display: flex; align-items: center; gap: 8px; color: #94a3b8; font-size: 12px; }
+
+.sidebar-footer .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--success); }
+
+.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+.topbar { height: 56px; min-height: 56px; background: var(--card-bg); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; }
+
+.topbar-left { display: flex; align-items: center; gap: 12px; }
+
+.topbar-left h2 { font-size: 16px; font-weight: 600; }
+
+.topbar-left .breadcrumb { color: var(--text-secondary); font-size: 13px; }
+
+.topbar-right { display: flex; align-items: center; gap: 16px; }
+
+.topbar-right .time { color: var(--text-secondary); font-size: 13px; }
+
+.content { flex: 1; overflow-y: auto; padding: 20px 24px; }
+
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
+
+.stat-card { background: var(--card-bg); border-radius: var(--radius); padding: 16px 20px; box-shadow: var(--shadow); }
+
+.stat-card .stat-label { font-size: 13px; color: var(--text-secondary); margin-bottom: 4px; }
+
+.stat-card .stat-value { font-size: 28px; font-weight: 700; color: var(--text); }
+
+.stat-card .stat-sub { font-size: 12px; color: var(--text-light); margin-top: 2px; }
+
+.stat-card .stat-icon { float: right; width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+
+.stat-card .stat-icon svg { width: 20px; height: 20px; }
+
+.card { background: var(--card-bg); border-radius: var(--radius); box-shadow: var(--shadow); }
+
+.card-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; border-bottom: 1px solid var(--border); }
+
+.card-header h3 { font-size: 15px; font-weight: 600; }
+
+.card-body { padding: 0; }
+
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+
+thead { background: #f8fafc; }
+
+th { text-align: left; padding: 10px 16px; font-weight: 600; color: var(--text-secondary); font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+
+td { padding: 10px 16px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+
+tr:hover td { background: #f8fafc; }
+
+tr:last-child td { border-bottom: none; }
+
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: var(--radius); font-size: 13px; font-weight: 500; cursor: pointer; border: none; transition: all 0.15s; }
+
+.btn-primary { background: var(--primary); color: #fff; }
+
+.btn-primary:hover { background: var(--primary-dark); }
+
+.btn-secondary { background: #f1f5f9; color: var(--text); }
+
+.btn-secondary:hover { background: #e2e8f0; }
+
+.btn-danger { background: var(--danger); color: #fff; }
+
+.btn-danger:hover { background: #dc2626; }
+
+.btn-success { background: var(--success); color: #fff; }
+
+.btn-success:hover { background: #16a34a; }
+
+.btn-warning { background: var(--warning); color: #fff; }
+
+.btn-warning:hover { background: #d97706; }
+
+.btn-sm { padding: 4px 10px; font-size: 12px; }
+
+.badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 500; }
+
+.badge-blue { background: #dbeafe; color: #1d4ed8; }
+
+.badge-green { background: #dcfce7; color: #16a34a; }
+
+.badge-yellow { background: #fef9c3; color: #a16207; }
+
+.badge-red { background: #fce4ec; color: #c62828; }
+
+.badge-gray { background: #f1f5f9; color: #64748b; }
+
+.badge-purple { background: #f3e8ff; color: #7c3aed; }
+
+.badge-orange { background: #fff7ed; color: #c2410c; }
+
+.toolbar { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+
+.toolbar .search-box { display: flex; align-items: center; background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 0 12px; }
+
+.toolbar .search-box svg { width: 16px; height: 16px; color: var(--text-light); }
+
+.toolbar .search-box input { border: none; outline: none; padding: 8px 8px; font-size: 13px; width: 200px; background: transparent; }
+
+.toolbar select { padding: 7px 10px; border: 1px solid var(--border); border-radius: var(--radius); font-size: 13px; background: var(--card-bg); outline: none; }
+
+.toolbar .spacer { flex: 1; }
+
+.modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4); z-index: 1000; align-items: center; justify-content: center; }
+
+.modal-overlay.active { display: flex; }
+
+.modal { background: var(--card-bg); border-radius: 8px; width: 560px; max-width: 90vw; max-height: 85vh; overflow: hidden; box-shadow: var(--shadow-lg); }
+
+.modal.wide { width: 720px; }
+
+.modal-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid var(--border); }
+
+.modal-header h3 { font-size: 15px; font-weight: 600; }
+
+.modal-close { background: none; border: none; cursor: pointer; padding: 4px; color: var(--text-light); }
+
+.modal-close:hover { color: var(--text); }
+
+.modal-body { padding: 20px; overflow-y: auto; max-height: calc(85vh - 120px); }
+
+.modal-footer { display: flex; justify-content: flex-end; gap: 8px; padding: 14px 20px; border-top: 1px solid var(--border); }
+
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+.form-grid .full { grid-column: 1 / -1; }
+
+.form-group { display: flex; flex-direction: column; }
+
+.form-group label { font-size: 13px; font-weight: 500; margin-bottom: 4px; color: var(--text); }
+
+.form-group input, .form-group select, .form-group textarea { padding: 8px 11px; border: 1px solid var(--border); border-radius: var(--radius); font-size: 13px; outline: none; transition: border 0.15s; font-family: inherit; background: #fff; }
+
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--primary); }
+
+.form-group textarea { resize: vertical; min-height: 60px; }
+
+.form-group .hint { font-size: 11px; color: var(--text-light); margin-top: 2px; }
+
+.detail-table td { padding: 8px 12px; border: none; border-bottom: 1px solid var(--border); }
+
+.detail-table td:first-child { color: var(--text-secondary); width: 100px; font-weight: 500; padding-left: 0; }
+
+.tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 16px; }
+
+.tab { padding: 8px 16px; font-size: 13px; font-weight: 500; color: var(--text-secondary); cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.15s; }
+
+.tab:hover { color: var(--text); }
+
+.tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+
+.actions { display: flex; gap: 4px; }
+
+.actions button { padding: 4px 8px; font-size: 12px; border: none; border-radius: 4px; cursor: pointer; background: transparent; color: var(--text-secondary); }
+
+.actions button:hover { background: #f1f5f9; color: var(--text); }
+
+.actions .edit-btn:hover { color: var(--primary); }
+
+.actions .danger-btn:hover { color: var(--danger); }
+
+.timeline { padding: 0; }
+
+.timeline-item { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+
+.timeline-item:last-child { border-bottom: none; }
+
+.timeline-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--primary); margin-top: 6px; flex-shrink: 0; }
+
+.timeline-dot.green { background: var(--success); }
+
+.timeline-dot.yellow { background: var(--warning); }
+
+.timeline-dot.red { background: var(--danger); }
+
+.timeline-dot.gray { background: var(--text-light); }
+
+.timeline-content { flex: 1; }
+
+.timeline-content .t-title { font-size: 13px; font-weight: 500; }
+
+.timeline-content .t-desc { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+
+.timeline-content .t-time { font-size: 11px; color: var(--text-light); margin-top: 1px; }
+
+.empty-state { text-align: center; padding: 40px 20px; color: var(--text-light); }
+
+.empty-state svg { width: 48px; height: 48px; color: var(--text-light); margin-bottom: 12px; opacity: 0.4; }
+
+.empty-state p { font-size: 14px; }
+
+.schedule-table { width: 100%; border-collapse: collapse; }
+
+.schedule-table th, .schedule-table td { text-align: center; padding: 8px; border: 1px solid var(--border); font-size: 12px; }
+
+.schedule-table th { background: #f8fafc; font-weight: 600; }
+
+.schedule-table .time-col { width: 80px; font-weight: 500; background: #f8fafc; }
+
+.schedule-cell { min-height: 60px; cursor: pointer; padding: 4px; border-radius: 4px; }
+
+.schedule-cell:hover { background: #f1f5f9; }
+
+.schedule-event { background: #dbeafe; color: #1d4ed8; padding: 3px 6px; border-radius: 3px; font-size: 11px; margin-bottom: 2px; cursor: pointer; }
+
+.schedule-event:hover { background: #bfdbfe; }
+
+.alert { padding: 10px 14px; border-radius: var(--radius); font-size: 13px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+
+.alert-info { background: #dbeafe; color: #1e40af; }
+
+.alert-success { background: #dcfce7; color: #166534; }
+
+.alert-warning { background: #fef9c3; color: #854d0e; }
+
+.alert-danger { background: #fee2e2; color: #991b1b; }
+
+.section { margin-bottom: 24px; }
+
+.section-title { font-size: 14px; font-weight: 600; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+
+.confirm-body { text-align: center; padding: 20px; }
+
+.confirm-body .confirm-icon { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; }
+
+.confirm-body .confirm-icon svg { width: 24px; height: 24px; }
+
+.confirm-body .confirm-text { font-size: 15px; margin-bottom: 4px; }
+
+.confirm-body .confirm-sub { font-size: 13px; color: var(--text-secondary); }
+
+.confirm-body .confirm-detail { font-size: 13px; color: var(--text-secondary); margin-top: 8px; padding: 8px 12px; background: #f8fafc; border-radius: var(--radius); text-align: left; }
+
+.flex-between { display: flex; align-items: center; justify-content: space-between; }
+
+</style>
+
+</head>
+
+<body>
+
+<div class="app">
+
+  <!-- Sidebar -->
+
+  <aside class="sidebar">
+
+    <div class="sidebar-header">
+
+      <h1>📚 教务管理</h1>
+
+      <p>培训机构管理系统</p>
+
+    </div>
+
+    <nav class="sidebar-nav" id="sidebarNav"></nav>
+
+    <div class="sidebar-footer">
+
+      <div class="status">
+
+        <span class="dot"></span>
+
+        <span>系统运行中 · v2.0</span>
+
+      </div>
+
+    </div>
+
+  </aside>
+
+
+
+  <!-- Main -->
+
+  <div class="main">
+
+    <header class="topbar">
+
+      <div class="topbar-left">
+
+        <h2 id="pageTitle">仪表盘</h2>
+
+        <span class="breadcrumb" id="breadcrumb">概览</span>
+
+      </div>
+
+      <div class="topbar-right">
+
+        <span class="time" id="clockDisplay"></span>
+
+      </div>
+
+    </header>
+
+    <div class="content" id="appContent"></div>
+
+  </div>
+
+</div>
+
+
+
+<!-- Modal -->
+
+<div class="modal-overlay" id="modalOverlay">
+
+  <div class="modal" id="modalContainer">
+
+    <div class="modal-header">
+
+      <h3 id="modalTitle">标题</h3>
+
+      <button class="modal-close" onclick="closeModal()"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+
+    </div>
+
+    <div class="modal-body" id="modalBody"></div>
+
+    <div class="modal-footer" id="modalFooter"></div>
+
+  </div>
+
+</div>
+
+
+
+<script>
+
+// ==================== DATA LAYER ====================
+
+const STORE_KEY = "edu_mgmt_data";
+
+const defaultData = {
+
+  leads: [], students: [], classes: [], schedules: [],
+
+  attendance: [], leaves: [], makeups: [], consumptions: [], finances: [],
+
+  nextId: { lead: 1, student: 1, class: 1, schedule: 1, attendance: 1, leave: 1, makeup: 1, consumption: 1, finance: 1 }
+
+};
+
+let storageType = 'memory';
+(function() {
+  try {
+    var k = '__test__';
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem(k, '1');
+      localStorage.removeItem(k);
+      storageType = 'localStorage';
+    }
+  } catch(e) {
+    try {
+      var k = '__test__';
+      document.cookie = k + '=1; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/';
+      if (document.cookie.indexOf(k) >= 0) {
+        document.cookie = k + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/';
+        storageType = 'cookie';
+      }
+    } catch(e2) {}
+  }
+})();
+
+function getCookie(name) {
+  var cookies = document.cookie.split(';');
+  for (var i = 0; i < cookies.length; i++) {
+    var c = cookies[i].trim();
+    if (c.indexOf(name + '=') === 0) {
+      return decodeURIComponent(c.substring(name.length + 1));
+    }
+  }
+  return null;
+}
+
+function setCookie(name, value, days) {
+  var d = new Date();
+  d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
+  document.cookie = name + '=' + encodeURIComponent(value) + '; expires=' + d.toUTCString() + '; path=/';
+}
+
+var db = loadData();
+
+function loadData() {
+  if (storageType === 'localStorage') {
+    try {
+      var raw = localStorage.getItem(STORE_KEY);
+      if (raw) { var p = JSON.parse(raw); return { ...JSON.parse(JSON.stringify(defaultData)), ...p }; }
+    } catch(e) {}
+  } else if (storageType === 'cookie') {
+    try {
+      var raw = getCookie(STORE_KEY);
+      if (raw) { var p = JSON.parse(raw); return { ...JSON.parse(JSON.stringify(defaultData)), ...p }; }
+    } catch(e) {}
+  }
+  return JSON.parse(JSON.stringify(defaultData));
+}
+
+function saveData() {
+  try {
+    var data = JSON.stringify(db);
+    if (storageType === 'localStorage') {
+      localStorage.setItem(STORE_KEY, data);
+    } else if (storageType === 'cookie') {
+      setCookie(STORE_KEY, data, 365);
+    }
+  } catch(e) {}
+}
+
+function genId(type) {
+
+  const prefix = { lead:"L", student:"S", class:"C", schedule:"SC", attendance:"A", leave:"LV", makeup:"M", consumption:"CS", finance:"F" }[type] || "X";
+
+  const n = db.nextId[type] || 1;
+
+  db.nextId[type] = n + 1; saveData();
+
+  return prefix + String(n).padStart(3,"0");
+
+}
+
+function today() { return new Date().toISOString().slice(0,10); }
+
+function now() { return new Date().toLocaleString("zh-CN"); }
+
+// ==================== BUSINESS LOGIC ====================
+
+function getStudentHours(studentId) { const s = db.students.find(x => x.id === studentId); return s ? s.remainingHours : 0; }
+
+function getStudentStatus(studentId) { const s = db.students.find(x => x.id === studentId); return s ? s.status : ""; }
+
+
+
+function checkConflict(teacher, classroom, date, startTime, endTime, excludeId) {
+
+  return db.schedules.filter(s => {
+
+    if (s.status === "已取消") return false;
+
+    if (excludeId && s.id === excludeId) return false;
+
+    if (s.date !== date) return false;
+
+    const overlap = s.startTime < endTime && s.endTime > startTime;
+
+    return (s.teacher === teacher && overlap) || (s.classroom === classroom && overlap);
+
+  });
+
+}
+
+
+
+function processAttendance(scheduleId, studentId, attStatus) {
+
+  if (attStatus === "出勤") {
+
+    const s = db.students.find(x => x.id === studentId);
+
+    if (s && s.remainingHours > 0) {
+
+      s.remainingHours = Math.max(0, s.remainingHours - 1);
+
+      db.consumptions.push({ id: genId("consumption"), studentId, scheduleId, hours: 1, date: today(), type: "正常消课", remark: "" });
+
+      if (s.remainingHours === 0 && s.status === "在读") s.status = "结业";
+
+      saveData();
+
+    }
+
+  }
+
+}
+
+
+
+// ==================== UI RENDER ENGINE ====================
+
+let currentPage = "dashboard";
+
+
+
+function navigate(page) {
+
+  currentPage = page;
+
+  document.querySelectorAll(".nav-item").forEach(el => el.classList.remove("active"));
+
+  const target = document.querySelector(`[data-page="${page}"]`);
+
+  if (target) target.classList.add("active");
+
+  renderPage(page);
+
+}
+
+
+
+const navConfig = [
+
+  { id:"dashboard", label:"仪表盘", icon:"layout-dashboard" },
+
+  { id:"leads", label:"线索管理", icon:"users" },
+
+  { id:"students", label:"学员管理", icon:"graduation-cap" },
+
+  { id:"classes", label:"班级管理", icon:"book-open" },
+
+  { id:"schedules", label:"排课程表", icon:"calendar" },
+
+  { id:"attendance", label:"考勤消课", icon:"clipboard-check" },
+
+  { id:"leaves", label:"请假补课", icon:"calendar-off" },
+
+  { id:"finance", label:"财务对账", icon:"receipt" },
+
+  { id:"reports", label:"数据中心", icon:"bar-chart-3" },
+
+];
+
+
+
+const pageTitles = {
+
+  dashboard: ["仪表盘", "概览"],
+
+  leads: ["线索管理", "线索录入 &middot; 跟进 &middot; 试听 &middot; 转化"],
+
+  students: ["学员管理", "档案 &middot; 课程 &middot; 状态管理"],
+
+  classes: ["班级管理", "班级创建 &middot; 分配"],
+
+  schedules: ["排课程表", "排课 &middot; 冲突检测"],
+
+  attendance: ["考勤消课", "打卡 &middot; 课时扣减 &middot; 对账"],
+
+  leaves: ["请假补课", "请假登记 &middot; 补课安排"],
+
+  finance: ["财务对账", "月度消课汇总 &middot; 教师结算"],
+
+  reports: ["数据中心", "全维度数据统计"],
+
+};
+
+
+
+function initSidebar() {
+
+  const nav = document.getElementById("sidebarNav");
+
+  nav.innerHTML = navConfig.map(item => `
+
+    <div class="nav-item${item.id === "dashboard" ? " active" : ""}" data-page="${item.id}" onclick="navigate('${item.id}')">
+
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="${iconPaths[item.icon]}"/></svg>
+
+      <span>${item.label}</span>
+
+    </div>
+
+  `).join("");
+
+}
+
+
+
+const iconPaths = {
+
+  "layout-dashboard": "M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z M9 22V12h6v10",
+
+  "users": "M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2 M9 7a4 4 0 1 0 0-8 4 4 0 0 0 0 8z M23 21v-2a4 4 0 0 0-3-3.87 M16 3.13a4 4 0 0 1 0 7.75",
+
+  "graduation-cap": "M22 10v6M2 10l10-5 10 5-10 5z M6 12v5c3 3 9 3 12 0v-5",
+
+  "book-open": "M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z",
+
+  "calendar": "M19 4H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z M16 2v4 M8 2v4 M3 10h18",
+
+  "clipboard-check": "M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2 M15 2H9a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1z M9 13l2 2 4-4",
+
+  "calendar-off": "M19 4H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z M16 2v4 M8 2v4 M3 10h18 M10 16l4 4 M14 16l-4 4",
+
+  "receipt": "M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1-2-1z M8 7h8 M8 11h6 M8 15h4",
+
+  "bar-chart-3": "M18 20V10 M12 20V4 M6 20v-6"
+
+};
+
+
+
+function renderPage(page) {
+
+  const [title, desc] = pageTitles[page] || ["页面", ""];
+
+  document.getElementById("pageTitle").innerHTML = title;
+
+  document.getElementById("breadcrumb").innerHTML = desc;
+
+  const content = document.getElementById("appContent");
+
+  const renderers = { dashboard: renderDashboard, leads: renderLeads, students: renderStudents, classes: renderClasses, schedules: renderSchedules, attendance: renderAttendance, leaves: renderLeaves, finance: renderFinance, reports: renderReports };
+
+  content.innerHTML = (renderers[page] || (() => "<p>页面加载中...</p>"))();
+
+}
+
+// ==================== DASHBOARD ====================
+
+function renderDashboard() {
+
+  const totalLeads = db.leads.length;
+
+  const activeLeads = db.leads.filter(l => !["无效","已报名"].includes(l.status)).length;
+
+  const totalStudents = db.students.length;
+
+  const activeStudents = db.students.filter(s => s.status === "在读").length;
+
+  const todaySchedules = db.schedules.filter(s => s.date === today() && s.status !== "已取消");
+
+  const lowHoursStudents = db.students.filter(s => s.status === "在读" && s.remainingHours <= 5 && s.remainingHours > 0);
+
+  const pendingAttendance = db.schedules.filter(s => s.date === today() && s.status === "待上课");
+
+  const todayLeaves = db.leaves.filter(l => l.date === today());
+
+
+
+  const activities = [];
+
+  db.leads.slice(-5).reverse().forEach(l => { activities.push({ time: l.createdAt || "", text: "新线索："+l.name+"（"+(l.意向课程||"-")+"）", type: l.status==="无效"?"red":l.status==="已报名"?"green":"blue" }); });
+
+  db.consumptions.slice(-5).reverse().forEach(c => { const s=db.students.find(x=>x.id===c.studentId); if(s) activities.push({time:c.date,text:s.name+" 消课1节，剩余"+s.remainingHours+"节",type:"blue"}); });
+
+  db.leaves.slice(-3).reverse().forEach(l => { const s=db.students.find(x=>x.id===l.studentId); if(s) activities.push({time:l.date,text:s.name+" 请假（"+l.reason+"）",type:"yellow"}); });
+
+
+
+  return `
+
+    <div class="stats-grid">
+
+      <div class="stat-card"><div class="stat-icon" style="background:#dbeafe;"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+
+        <div class="stat-label">待跟进线索</div><div class="stat-value">${activeLeads}</div><div class="stat-sub">共 ${totalLeads} 条线索</div></div>
+
+      <div class="stat-card"><div class="stat-icon" style="background:#dcfce7;"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></div>
+
+        <div class="stat-label">在读学员</div><div class="stat-value">${activeStudents}</div><div class="stat-sub">共 ${totalStudents} 名学员</div></div>
+
+      <div class="stat-card"><div class="stat-icon" style="background:#fef9c3;"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#a16207" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+
+        <div class="stat-label">今日课程</div><div class="stat-value">${todaySchedules.length}</div><div class="stat-sub">待考勤 ${pendingAttendance.length} 节</div></div>
+
+      <div class="stat-card"><div class="stat-icon" style="background:#fce4ec;"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c62828" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+
+        <div class="stat-label">课时不足提醒</div><div class="stat-value">${lowHoursStudents.length}</div><div class="stat-sub">剩余 &le; 5课时的学员</div></div>
+
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+
+      <div class="card"><div class="card-header"><h3>📋 今日待办</h3></div>
+
+        <div class="card-body" style="padding:16px;">
+
+          ${pendingAttendance.length===0 && todayLeaves.length===0 && lowHoursStudents.length===0 ? '<div class="empty-state"><p>今日暂无待办事项</p></div>' : ""}
+
+          ${pendingAttendance.length>0 ? '<div class="alert alert-info"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> 有 '+pendingAttendance.length+' 节课待考勤</div>' : ""}
+
+          ${lowHoursStudents.length>0 ? '<div class="alert alert-warning"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> '+lowHoursStudents.length+' 名学员课时不足，请跟进续费</div>' : ""}
+
+          ${todayLeaves.length>0 ? '<div class="alert alert-info"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> '+todayLeaves.length+' 名学员请假</div>' : ""}
+
+        </div></div>
+
+      <div class="card"><div class="card-header"><h3>⏱ 最近动态</h3></div>
+
+        <div class="card-body" style="padding:16px;">
+
+          ${activities.length===0 ? '<div class="empty-state"><p>暂无动态</p></div>' : '<div class="timeline">'+activities.slice(0,8).map(a => '<div class="timeline-item"><div class="timeline-dot '+a.type+'"></div><div class="timeline-content"><div class="t-title">'+a.text+'</div><div class="t-time">'+a.time+'</div></div></div>').join("")+'</div>'}
+
+        </div></div>
+
+    </div>`;
+
+}
+
+
+
+// ==================== LEADS ====================
+
+function renderLeads() {
+
+  const searchEl = document.getElementById("leadSearch");
+
+  const filterEl = document.getElementById("leadStatusFilter");
+
+  const q = searchEl ? searchEl.value.toLowerCase() : "";
+
+  const fs = filterEl ? filterEl.value : "";
+
+  let list = [...db.leads];
+
+  if (fs) list = list.filter(l => l.status === fs);
+
+  if (q) list = list.filter(l => l.name.toLowerCase().includes(q) || l.phone.includes(q));
+
+
+
+  return `
+
+    <div class="toolbar">
+
+      <div class="search-box"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input id="leadSearch" placeholder="搜索姓名/电话..." oninput="renderPage(&apos;leads&apos;)"></div>
+
+      <select id="leadStatusFilter" onchange="renderPage(&apos;leads&apos;)">
+
+        <option value="">全部状态</option>
+
+        <option ${fs==="新线索"?"selected":""}>新线索</option>
+
+        <option ${fs==="已跟进"?"selected":""}>已跟进</option>
+
+        <option ${fs==="已试听"?"selected":""}>已试听</option>
+
+        <option ${fs==="已报名"?"selected":""}>已报名</option>
+
+        <option ${fs==="无效"?"selected":""}>无效</option>
+
+      </select>
+
+      <div class="spacer"></div>
+
+      <button class="btn btn-primary" onclick="showAddLead()"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> 录入线索</button>
+
+    </div>
+
+    <div class="card"><div class="card-body">
+
+      <table>
+
+        <thead><tr><th>姓名</th><th>联系方式</th><th>意向课程</th><th>来源</th><th>状态</th><th>跟进</th><th>操作</th></tr></thead>
+
+        <tbody>
+
+          ${list.length===0 ? '<tr><td colspan="7"><div class="empty-state"><p>暂无线索数据</p></div></td></tr>'
+
+          : list.map(l => '<tr><td><strong>'+l.name+'</strong></td><td>'+l.phone+'</td><td>'+(l.意向课程||"-")+'</td><td>'+(l.source||"-")+'</td><td>'+statusBadge(l.status)+'</td><td style="font-size:12px;color:var(--text-secondary);">'+(l.followUps&&l.followUps.length>0?l.followUps[l.followUps.length-1].date:"-")+'</td><td><div class="actions"><button class="edit-btn" onclick="showLeadDetail(\''+l.id+'\')"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button><button class="edit-btn" onclick="showEditLead(\''+l.id+'\')"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="danger-btn" onclick="deleteLead(\''+l.id+'\')"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></div></td></tr>').join("")}
+
+        </tbody>
+
+      </table>
+
+    </div></div>`;
+
+}
+
+
+
+function statusBadge(status) {
+
+  const map = {"新线索":"badge-blue","已跟进":"badge-yellow","已试听":"badge-purple","已报名":"badge-green","无效":"badge-red","在读":"badge-green","停课":"badge-yellow","结业":"badge-gray","已退费":"badge-red","进行中":"badge-green","已结束":"badge-gray","待上课":"badge-blue","已上课":"badge-green","已取消":"badge-red","已批准":"badge-green","待补课":"badge-yellow","已完成":"badge-green","待结算":"badge-yellow","已结算":"badge-green","出勤":"badge-green","请假":"badge-yellow","旷课":"badge-red","-":"badge-gray"};
+
+  const cls = map[status] || "badge-gray";
+
+  return '<span class="badge '+cls+'">'+(status||"-")+'</span>';
+
+}
+
+// ==================== LEADS CRUD ====================
+
+function showAddLead() {
+
+  openModal("录入新线索", `
+
+    <div class="form-grid">
+
+      <div class="form-group"><label>姓名 *</label><input id="leadName" placeholder="请输入姓名"></div>
+
+      <div class="form-group"><label>联系方式 *</label><input id="leadPhone" placeholder="请输入手机号"></div>
+
+      <div class="form-group"><label>意向课程</label><input id="leadCourse" placeholder="如：Python编程"></div>
+
+      <div class="form-group"><label>来源</label><select id="leadSource"><option>线下推广</option><option>线上广告</option><option>老带新</option><option>自然到店</option><option>其他</option></select></div>
+
+      <div class="form-group full"><label>备注</label><textarea id="leadRemark" rows="2"></textarea></div>
+
+    </div>`, [
+
+    {text:"取消", cls:"btn-secondary", action:"closeModal()"},
+
+    {text:"保存并跟进", cls:"btn-primary", action:"saveLead()"}
+
+  ]);
+
+}
+
+
+
+function saveLead() {
+
+  const name = document.getElementById("leadName").value.trim();
+
+  const phone = document.getElementById("leadPhone").value.trim();
+
+  if (!name || !phone) { alert("请填写姓名和联系方式"); return; }
+
+  db.leads.push({ id:genId("lead"), name, phone, 意向课程:document.getElementById("leadCourse").value.trim()||"-", source:document.getElementById("leadSource").value, status:"新线索", followUps:[], remark:document.getElementById("leadRemark").value.trim(), createdAt:today() });
+
+  saveData(); closeModal(); renderPage("leads");
+
+}
+
+
+
+function showEditLead(id) {
+
+  const l = db.leads.find(x => x.id === id);
+
+  if (!l) return;
+
+  var src = l.source || "";
+
+  openModal("编辑线索", [
+
+    '<div class="form-grid">',
+
+    '<div class="form-group"><label>姓名</label><input id="leadName" value="' + l.name + '">',
+
+    '<div class="form-group"><label>联系方式</label><input id="leadPhone" value="' + l.phone + '">',
+
+    '<div class="form-group"><label>意向课程</label><input id="leadCourse" value="' + (l.意向课程||"") + '">',
+
+    '<div class="form-group"><label>来源</label><select id="leadSource"><option ' + (src==="线下推广"?"selected":"") + '>线下推广</option><option ' + (src==="线上广告"?"selected":"") + '>线上广告</option><option ' + (src==="老带新"?"selected":"") + '>老带新</option><option ' + (src==="自然到店"?"selected":"") + '>自然到店</option><option ' + (src==="其他"?"selected":"") + '>其他</option></select>',
+
+    '</div>'
+
+  ].join("\n"), [
+
+    {text:"取消", cls:"btn-secondary", action:"closeModal()"},
+
+    {text:"保存", cls:"btn-primary", action:"saveEditLead('" + id + "')"}
+
+  ]);
+
+}
+
+function saveEditLead(id) {
+
+  const l = db.leads.find(x => x.id === id);
+
+  if (!l) return;
+
+  l.name = document.getElementById("leadName").value.trim() || l.name;
+
+  l.phone = document.getElementById("leadPhone").value.trim() || l.phone;
+
+  l.意向课程 = document.getElementById("leadCourse").value.trim();
+
+  l.source = document.getElementById("leadSource").value;
+
+  saveData(); closeModal(); renderPage("leads");
+
+}
+
+
+
+function showLeadDetail(id) {
+
+  const l = db.leads.find(x => x.id === id);
+
+  if (!l) return;
+
+  var fups = !l.followUps||l.followUps.length===0 ? '<div class="empty-state"><p>暂无跟进记录</p></div>' : '<div class="timeline">'+l.followUps.map(function(f){return '<div class="timeline-item"><div class="timeline-dot blue"></div><div class="timeline-content"><div class="t-title">'+(f.content||"跟进")+'</div><div class="t-desc">'+(f.nextAction?"下一步: "+f.nextAction:"")+'</div><div class="t-time">'+f.date+'</div></div></div>';}).join("")+'</div>';
+
+  openModal("线索详情 · "+l.name, `
+
+    <div style="margin-bottom:12px;">
+
+      <table class="detail-table">
+
+        <tr><td>状态</td><td>${statusBadge(l.status)}</td><td>姓名</td><td>${l.name}</td></tr>
+
+        <tr><td>电话</td><td>${l.phone}</td><td>意向课程</td><td>${l.意向课程||"-"}</td></tr>
+
+        <tr><td>来源</td><td>${l.source||"-"}</td><td>创建时间</td><td>${l.createdAt||"-"}</td></tr>
+
+        ${l.invalidReason ? '<tr><td>流失原因</td><td colspan="3" style="color:var(--danger)">'+l.invalidReason+'</td></tr>' : ''}
+
+      </table>
+
+    </div>
+
+    <div class="section-title">跟进记录</div>${fups}
+
+    <div style="margin-top:16px;border-top:1px solid var(--border);padding-top:16px;">
+
+      <div class="section-title" style="margin-bottom:8px;">快速操作</div>
+
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+
+        ${l.status!=='已报名'&&l.status!=='无效' ? '<button class="btn btn-primary btn-sm" onclick="doFollowUp(\u0027'+l.id+'\u0027)">跟进</button>' : ''}
+
+        ${l.status!=='已试听'&&l.status!=='已报名'&&l.status!=='无效' ? '<button class="btn btn-warning btn-sm" onclick="doScheduleTrial(\u0027'+l.id+'\u0027)">安排试听</button>' : ''}
+
+        ${l.status==='已试听' ? '<button class="btn btn-success btn-sm" onclick="doEnroll(\u0027'+l.id+'\u0027)">确认报名</button>' : ''}
+
+        ${l.status!=='无效'&&l.status!=='已报名' ? '<button class="btn btn-danger btn-sm" onclick="doMarkInvalid(\u0027'+l.id+'\u0027)">标记无效</button>' : ''}
+
+      </div>
+
+    </div>`, [
+
+    {text:"关闭", cls:"btn-secondary", action:"closeModal()"}
+
+  ]);
+
+}
+
+
+
+function doFollowUp(id) {
+
+  closeModal();
+
+  const l = db.leads.find(x => x.id === id);
+
+  if (!l) return;
+
+  openModal("跟进 · "+l.name, `
+
+    <div class="form-grid">
+
+      <div class="form-group full"><label>跟进内容</label><textarea id="fuContent" rows="3" placeholder="记录本次沟通内容..."></textarea></div>
+
+      <div class="form-group full"><label>下一步计划</label><input id="fuNext" placeholder="如：安排试听 / 再次致电"></div>
+
+      <div class="form-group"><label>跟进结果</label><select id="fuStatus"><option value="已跟进">继续跟进</option><option value="已试听">已预约试听</option><option value="无效">无效线索</option></select></div>
+
+    </div>`, [
+
+    {text:"取消", cls:"btn-secondary", action:"closeModal()"},
+
+    {text:"提交跟进", cls:"btn-primary", action:"submitFollowUp('"+id+"')"}
+
+  ]);
+
+}
+
+
+
+function submitFollowUp(id) {
+
+  const l = db.leads.find(x => x.id === id);
+
+  if (!l) return;
+
+  const content = document.getElementById("fuContent").value.trim();
+
+  if (!content) { alert("请填写跟进内容"); return; }
+
+  if (!l.followUps) l.followUps = [];
+
+  l.followUps.push({ date:today(), content, nextAction:document.getElementById("fuNext").value.trim() });
+
+  l.status = document.getElementById("fuStatus").value;
+
+  if (l.status==="已试听"&&!l.trialDate) l.trialDate = today();
+
+  saveData(); closeModal(); renderPage("leads");
+
+}
+
+
+
+function doScheduleTrial(id) {
+
+  closeModal();
+
+  const l = db.leads.find(x => x.id === id);
+
+  if (!l) return;
+
+  openModal("安排试听 · "+l.name, `
+
+    <div class="form-grid">
+
+      <div class="form-group"><label>试听日期</label><input id="trialDate" type="date" value="'+today()+'"></div>
+
+      <div class="form-group"><label>试听时间</label><input id="trialTime" type="time" value="10:00"></div>
+
+      <div class="form-group full"><label>备注</label><textarea id="trialNote" rows="2"></textarea></div>
+
+    </div>`, [
+
+    {text:"取消", cls:"btn-secondary", action:"closeModal()"},
+
+    {text:"确认安排", cls:"btn-primary", action:"submitTrial('"+id+"')"}
+
+  ]);
+
+}
+
+
+
+function submitTrial(id) {
+
+  const l = db.leads.find(x => x.id === id);
+
+  if (!l) return;
+
+  l.trialDate = document.getElementById("trialDate").value;
+
+  l.trialTime = document.getElementById("trialTime").value;
+
+  l.status = "已试听";
+
+  l.trialNote = document.getElementById("trialNote").value.trim();
+
+  if (!l.followUps) l.followUps = [];
+
+  l.followUps.push({ date:today(), content:"安排试听："+l.trialDate+" "+l.trialTime, nextAction:"试听后跟进" });
+
+  saveData(); closeModal(); renderPage("leads");
+
+}
+
+
+
+function doEnroll(leadId) {
+
+  closeModal();
+
+  const l = db.leads.find(x => x.id === leadId);
+
+  if (!l) return;
+
+  var classOpts="";for(var i=0;i<db.classes.length;i++){var cl=db.classes[i];classOpts+="<option value=\""+cl.id+"\">"+cl.name+" ("+cl.teacher+")</option>";}
+  openModal("确认报名 · "+l.name, `
+
+    <div class="form-grid">
+
+      <div class="form-group"><label>学员姓名 *</label><input id="stuName" value="${l.name}"></div>
+
+      <div class="form-group"><label>联系方式 *</label><input id="stuPhone" value="${l.phone}"></div>
+
+      <div class="form-group"><label>报名课程 *</label><input id="stuCourse" value="${l.意向课程}" placeholder="如：Python编程"></div>
+
+      <div class="form-group"><label>课程包</label><select id="stuPackage"><option>基础班(40课时)</option><option>提高班(60课时)</option><option>VIP一对一(20课时)</option><option>自定义</option></select></div>
+
+      <div class="form-group"><label>总课时 *</label><input id="stuHours" type="number" value="40" min="1"></div>
+
+      <div class="form-group"><label>课时单价(元)</label><input id="stuPrice" type="number" value="100" min="0"></div>
+
+      <div class="form-group"><label>有效期开始</label><input id="stuValidityStart" type="date" value="${today()}"></div>
+
+      <div class="form-group"><label>有效期结束</label><input id="stuValidityEnd" type="date" value="${new Date(Date.now()+180*86400000).toISOString().slice(0,10)}"></div>
+
+      <div class="form-group full"><label>分配班级</label><select id="enrollClass"><option value="">暂不分配</option>${classOpts}</select></div>
+
+
+      <div class="form-group full"><label>备注</label><textarea id="stuRemark" rows="2"></textarea></div>
+
+    </div>`, [
+
+    {text:"取消", cls:"btn-secondary", action:"closeModal()"},
+
+    {text:"确认报名", cls:"btn-success", action:"submitEnroll('"+leadId+"')"}
+
+  ]);
+
+}
+
+
+
+function submitEnroll(leadId) {
+
+  const name = document.getElementById("stuName").value.trim();
+
+  const phone = document.getElementById("stuPhone").value.trim();
+
+  const course = document.getElementById("stuCourse").value.trim();
+
+  const totalHours = parseInt(document.getElementById("stuHours").value) || 40;
+
+  if (!name || !phone || !course) { alert("请填写完整信息"); return; }
+
+  const student = { id:genId("student"), name, phone, course, package:document.getElementById("stuPackage").value, totalHours, remainingHours:totalHours, unitPrice:parseInt(document.getElementById("stuPrice").value)||0, validityStart:document.getElementById("stuValidityStart").value, validityEnd:document.getElementById("stuValidityEnd").value, status:"在读", classIds:[], remark:document.getElementById("stuRemark").value.trim(), createdAt:today() };
+  var ec = document.getElementById("enrollClass").value;
+  if (ec) { student.classIds = [ec]; var tc = db.classes.find(function(x){return x.id===ec;}); if(tc){if(!tc.studentIds)tc.studentIds=[];tc.studentIds.push(student.id);} }
+
+  db.students.push(student);
+
+  const l = db.leads.find(x => x.id === leadId);
+
+  if (l) { l.status = "已报名"; if(!l.followUps) l.followUps = []; l.followUps.push({date:today(), content:"学员 "+name+" 正式报名 "+course, nextAction:"安排入班"}); }
+
+  saveData(); closeModal(); renderPage("leads");
+
+}
+
+
+
+function doMarkInvalid(id) {
+
+  closeModal();
+
+  const l = db.leads.find(x => x.id === id);
+
+  if (!l) return;
+
+  openModal("标记无效", `
+
+    <div class="form-grid">
+
+      <div class="form-group full"><label>流失原因</label><select id="invalidReason"><option>价格原因</option><option>距离太远</option><option>时间不合适</option><option>选择其他机构</option><option>无法联系</option><option>其他</option></select></div>
+
+      <div class="form-group full"><label>详细备注</label><textarea id="invalidNote" rows="2"></textarea></div>
+
+    </div>`, [
+
+    {text:"取消", cls:"btn-secondary", action:"closeModal()"},
+
+    {text:"确认标记", cls:"btn-danger", action:"submitInvalid('"+id+"')"}
+
+  ]);
+
+}
+
+
+
+function submitInvalid(id) {
+
+  const l = db.leads.find(x => x.id === id);
+
+  if (!l) return;
+
+  l.status = "无效"; l.invalidReason = document.getElementById("invalidReason").value; l.invalidNote = document.getElementById("invalidNote").value.trim();
+
+  saveData(); closeModal(); renderPage("leads");
+
+}
+
+
+
+function deleteLead(id) {
+
+  if (!confirm("确认删除此线索？")) return;
+
+  db.leads = db.leads.filter(x => x.id !== id); saveData(); renderPage("leads");
+
+}
+
+// ==================== STUDENTS ====================
+
+function renderStudents() {
+
+  const searchEl = document.getElementById("stuSearch");
+
+  const filterEl = document.getElementById("stuStatusFilter");
+
+  const q = searchEl ? searchEl.value.toLowerCase() : "";
+
+  const fs = filterEl ? filterEl.value : "";
+
+  let list = [...db.students];
+
+  if (fs) list = list.filter(s => s.status === fs);
+
+  if (q) list = list.filter(s => s.name.toLowerCase().includes(q) || s.phone.includes(q));
+
+
+
+  return `
+
+    <div class="toolbar">
+
+      <div class="search-box"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input id="stuSearch" placeholder="搜索姓名/电话..." oninput="renderPage(&apos;students&apos;)"></div>
+
+      <select id="stuStatusFilter" onchange="renderPage(&apos;students&apos;)">
+
+        <option value="">全部状态</option>
+
+        <option ${fs==="在读"?"selected":""}>在读</option>
+
+        <option ${fs==="停课"?"selected":""}>停课</option>
+
+        <option ${fs==="结业"?"selected":""}>结业</option>
+
+        <option ${fs==="已退费"?"selected":""}>已退费</option>
+
+      </select>
+
+      <div class="spacer"></div>
+
+      <button class="btn btn-primary" onclick="showAddStudent()"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> 添加学员</button>
+
+    </div>
+
+    <div class="card"><div class="card-body">
+
+      <table>
+
+        <thead><tr><th>姓名</th><th>联系方式</th><th>课程</th><th>剩余课时</th><th>状态</th><th>有效期</th><th>操作</th></tr></thead>
+
+        <tbody>
+
+          ${list.length===0 ? '<tr><td colspan="7"><div class="empty-state"><p>暂无学员数据</p></div></td></tr>' :
+
+          list.map(s => '<tr><td><strong>'+s.name+'</strong></td><td>'+s.phone+'</td><td></td><td><strong style="color:'+(s.remainingHours<=5?"var(--danger)":"var(--success)")+'">'+s.remainingHours+'</strong> / '+s.totalHours+'</td><td>'+statusBadge(s.status)+'</td><td style="font-size:12px;color:var(--text-secondary)">'+(s.validityStart||"-")+" ~ "+(s.validityEnd||"-")+'</td><td><div class="actions"><button class="edit-btn" onclick="showStudentDetail(\''+s.id+'\')"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button><button class="edit-btn" onclick="showEditStudent(\''+s.id+'\')"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="danger-btn" onclick="deleteStudent(\''+s.id+'\')"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></div></td></tr>').join("")}
+
+        </tbody>
+
+      </table>
+
+    </div></div>`;
+
+}
+
+
+
+function showAddStudent() {
+
+  openModal("添加学员", `
+
+    <div class="form-grid">
+
+      <div class="form-group"><label>姓名 *</label><input id="stuName"></div>
+
+      <div class="form-group"><label>联系方式 *</label><input id="stuPhone"></div>
+
+      <div class="form-group"><label>课程 *</label><input id="stuCourse" placeholder="如：Python编程"></div>
+
+      <div class="form-group"><label>课程包</label><select id="stuPackage"><option>基础班(40课时)</option><option>提高班(60课时)</option><option>VIP一对一(20课时)</option><option>自定义</option></select></div>
+
+      <div class="form-group"><label>总课时</label><input id="stuHours" type="number" value="40"></div>
+
+      <div class="form-group"><label>课时单价(元)</label><input id="stuPrice" type="number" value="100"></div>
+
+      <div class="form-group"><label>有效期开始</label><input id="stuValidityStart" type="date" value="${today()}"></div>
+
+      <div class="form-group"><label>有效期结束</label><input id="stuValidityEnd" type="date" value="${new Date(Date.now()+180*86400000).toISOString().slice(0,10)}"></div>
+
+      <div class="form-group full"><label>备注</label><textarea id="stuRemark" rows="2"></textarea></div>
+
+    </div>`, [
+
+    {text:"取消", cls:"btn-secondary", action:"closeModal()"},
+
+    {text:"保存", cls:"btn-primary", action:"saveAddStudent()"}
+
+  ]);
+
+}
+
+
+
+function saveAddStudent() {
+
+  const name = document.getElementById("stuName").value.trim();
+
+  const phone = document.getElementById("stuPhone").value.trim();
+
+  const course = document.getElementById("stuCourse").value.trim();
+
+  if (!name || !phone || !course) { alert("请填写姓名、联系方式和课程"); return; }
+
+  const th = parseInt(document.getElementById("stuHours").value) || 40;
+
+  db.students.push({ id:genId("student"), name, phone, course, package:document.getElementById("stuPackage").value, totalHours:th, remainingHours:th, unitPrice:parseInt(document.getElementById("stuPrice").value)||0, validityStart:document.getElementById("stuValidityStart").value, validityEnd:document.getElementById("stuValidityEnd").value, status:"在读", classIds:[], remark:document.getElementById("stuRemark").value.trim(), createdAt:today() });
+
+  saveData(); closeModal(); renderPage("students");
+
+}
+
+
+
+function showStudentDetail(id) {
+
+  const s = db.students.find(x => x.id === id);
+
+  if (!s) return;
+
+  var classes = db.classes.filter(function(c){return s.classIds && s.classIds.indexOf(c.id) >= 0;});
+
+  const consumptions = db.consumptions.filter(c => c.studentId === id).slice(-10).reverse();
+
+  const leaves = db.leaves.filter(l => l.studentId === id).slice(-5).reverse();
+
+  const makeups = db.makeups.filter(m => m.studentId === id).slice(-5).reverse();
+
+
+
+  openModal("学员详情 · "+s.name, `
+
+    <div class="section-title">基本信息</div>
+
+    <table class="detail-table">
+
+      <tr><td>姓名</td><td>${s.name}</td><td>状态</td><td>${statusBadge(s.status)}</td></tr>
+
+      <tr><td>电话</td><td>${s.phone}</td><td>课程</td><td></td></tr>
+
+      <tr><td>课时</td><td><strong style="color:${s.remainingHours<=5?"var(--danger)":"var(--success)"}">${s.remainingHours}</strong> / ${s.totalHours}</td><td>单价</td><td>${s.unitPrice||0} 元/课时</td></tr>
+
+      <tr><td>有效期</td><td>${s.validityStart||"-"} ~ ${s.validityEnd||"-"}</td><td>课程包</td><td>${s.package||"-"}</td></tr>
+
+      <tr><td>所属班级</td><td colspan="3">${classes.length?classes.map(function(c){return c.name;}).join("、"):"未分配"}</td></tr>
+
+    </table>
+
+    <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
+
+      ${s.status==="在读"?('<button class="btn btn-warning btn-sm" onclick="doPauseStudent(\u0027'+s.id+'\u0027)">停课</button><button class="btn btn-primary btn-sm" onclick="doTransferClass(\u0027'+s.id+'\u0027)">转班</button><button class="btn btn-danger btn-sm" onclick="doRefundStudent(\u0027'+s.id+'\u0027)">退费</button>'+(s.remainingHours<=5?'<button class="btn btn-success btn-sm" onclick="doRenewStudent(\u0027'+s.id+'\u0027)">续费</button>':"")):""}
+
+      ${s.status==="停课"?('<button class="btn btn-success btn-sm" onclick="doResumeStudent(\u0027'+s.id+'\u0027)">复课</button>'):""}
+
+    </div>
+
+    <div style="margin-top:12px;">
+
+      <div class="tabs">
+
+        <div class="tab active" onclick="switchTab(this,1)">消课记录</div>
+
+        <div class="tab" onclick="switchTab(this,2)">请假记录</div>
+
+        <div class="tab" onclick="switchTab(this,3)">补课记录</div>
+
+      </div>
+
+      <div class="tab-content active">${consumptions.length===0?'<div class="empty-state"><p>暂无消课记录</p></div>':'<table style="font-size:12px;"><thead><tr><th>日期</th><th>类型</th><th>课时</th><th>备注</th></tr></thead><tbody>'+consumptions.map(function(c){return '<tr><td>'+c.date+'</td><td>'+c.type+'</td><td>-'+c.hours+'</td><td style="color:var(--text-secondary)">'+(c.remark||"-")+'</td></tr>';}).join("")+'</tbody></table>'}</div>
+
+      <div class="tab-content">${leaves.length===0?'<div class="empty-state"><p>暂无请假记录</p></div>':'<table style="font-size:12px;"><thead><tr><th>日期</th><th>原因</th><th>状态</th></tr></thead><tbody>'+leaves.map(function(lv){return '<tr><td>'+lv.date+'</td><td>'+lv.reason+'</td><td>'+statusBadge(lv.status)+'</td></tr>';}).join("")+'</tbody></table>'}</div>
+
+      <div class="tab-content">${makeups.length===0?'<div class="empty-state"><p>暂无补课记录</p></div>':'<table style="font-size:12px;"><thead><tr><th>补课日期</th><th>状态</th></tr></thead><tbody>'+makeups.map(function(m){return '<tr><td>'+m.makeupDate+'</td><td>'+statusBadge(m.status)+'</td></tr>';}).join("")+'</tbody></table>'}</div>
+
+    </div>`, [
+
+    {text:"关闭", cls:"btn-secondary", action:"closeModal()"}
+
+  ]);
+
+}
+
+function switchTab(el, idx) {
+
+  detailTabIdx = idx;
+
+  el.parentElement.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+
+  el.classList.add("active");
+
+  el.parentElement.parentElement.querySelectorAll(".tab-content").forEach(t => t.classList.remove("active"));
+
+  el.parentElement.parentElement.querySelectorAll(".tab-content")[idx-1].classList.add("active");
+
+}
+
+
+
+function showEditStudent(id) {
+
+  const s = db.students.find(x => x.id === id);
+
+  if (!s) return;
+
+  openModal("编辑学员 · "+s.name, `
+
+    <div class="form-grid">
+
+      <div class="form-group"><label>姓名</label><input id="stuName" value="${s.name}"></div>
+
+      <div class="form-group"><label>电话</label><input id="stuPhone" value="${s.phone}"></div>
+
+      <div class="form-group"><label>课程</label><input id="stuCourse" value="${s.course||""}"></div>
+
+      <div class="form-group"><label>总课时</label><input id="stuTotal" type="number" value="${s.totalHours}"></div>
+
+      <div class="form-group"><label>剩余课时</label><input id="stuRemain" type="number" value="${s.remainingHours}"></div>
+
+      <div class="form-group"><label>单价(元)</label><input id="stuPrice" type="number" value="${s.unitPrice||0}"></div>
+
+      <div class="form-group"><label>有效期开始</label><input id="stuVS" type="date" value="${s.validityStart||""}"></div>
+
+      <div class="form-group"><label>有效期结束</label><input id="stuVE" type="date" value="${s.validityEnd||""}"></div>
+
+    </div>`, [
+
+    {text:"取消", cls:"btn-secondary", action:"closeModal()"},
+
+    {text:"保存", cls:"btn-primary", action:"saveEditStudent('"+id+"')"}
+
+  ]);
+
+}
+
+
+
+function saveEditStudent(id) {
+
+  const s = db.students.find(x => x.id === id);
+
+  if (!s) return;
+
+  s.name = document.getElementById("stuName").value.trim() || s.name;
+
+  s.phone = document.getElementById("stuPhone").value.trim() || s.phone;
+
+  s.course = document.getElementById("stuCourse").value.trim();
+
+  s.totalHours = parseInt(document.getElementById("stuTotal").value) || s.totalHours;
+
+  s.remainingHours = parseInt(document.getElementById("stuRemain").value) || 0;
+
+  s.unitPrice = parseInt(document.getElementById("stuPrice").value) || 0;
+
+  s.validityStart = document.getElementById("stuVS").value;
+
+  s.validityEnd = document.getElementById("stuVE").value;
+
+  saveData(); closeModal(); renderPage("students");
+
+}
+
+
+
+function deleteStudent(id) {
+
+  if (!confirm("确认删除此学员？")) return;
+
+  db.students = db.students.filter(x => x.id !== id); saveData(); renderPage("students");
+
+}
+
+
+
+function doPauseStudent(id) {
+
+  closeModal();
+
+  const s = db.students.find(x => x.id === id);
+
+  if (!s) return;
+
+  openModal("确认停课", `<div class="confirm-body"><div class="confirm-icon" style="background:#fef9c3;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#a16207" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div><div class="confirm-text">确认将 ${s.name} 标记为停课？</div><div class="confirm-sub">剩余 ${s.remainingHours} 课时将被冻结，暂停排课</div></div>`, [
+
+    {text:"取消", cls:"btn-secondary", action:"closeModal()"},
+
+    {text:"确认停课", cls:"btn-warning", action:"submitPause('"+id+"')"}
+
+  ]);
+
+}
+
+
+
+function submitPause(id) {
+
+  const s = db.students.find(x => x.id === id);
+
+  if (s) s.status = "停课";
+
+  saveData(); closeModal(); renderPage("students");
+
+}
+
+
+
+function doResumeStudent(id) {
+
+  const s = db.students.find(x => x.id === id);
+
+  if (!s) return;
+
+  s.status = "在读";
+
+  saveData(); closeModal(); renderPage("students");
+
+}
+
+
+
+function doTransferClass(id) {
+
+  closeModal();
+
+  const s = db.students.find(x => x.id === id);
+
+  if (!s) return;
+
+  const avail = db.classes.filter(c => c.status === "进行中");
+
+  openModal("转班 · "+s.name, `
+
+    <div style="margin-bottom:12px;font-size:14px;">当前课时: <strong>${s.remainingHours}</strong> 课时</div>
+
+    <div class="form-group"><label>目标班级</label><select id="targetClass"><option value="">请选择班级</option>${avail.map(c => '<option value="'+c.id+'">'+c.name+' ('+c.teacher+' · '+(c.scheduleText||"")+')</option>').join("")}</select></div>
+
+    <div class="form-group" style="margin-top:8px;"><label>转班原因</label><textarea id="transferReason" rows="2"></textarea></div>`, [
+
+    {text:"取消", cls:"btn-secondary", action:"closeModal()"},
+
+    {text:"提交转班", cls:"btn-primary", action:"submitTransfer('"+id+"')"}
+
+  ]);
+
+}
+
+
+
+function submitTransfer(id) {
+
+  const s = db.students.find(x => x.id === id);
+
+  if (!s) return;
+
+  const t = document.getElementById("targetClass").value;
+
+  if (!t) { alert("请选择目标班级"); return; }
+
+  s.previousClasses = [...(s.classIds||[])];
+
+  s.classIds = [t];
+
+  saveData(); closeModal(); renderPage("students");
+
+}
+
+
+
+function doRefundStudent(id) {
+
+  closeModal();
+
+  const s = db.students.find(x => x.id === id);
+
+  if (!s) return;
+
+  const used = s.totalHours - s.remainingHours;
+
+  const amount = s.remainingHours * (s.unitPrice||0);
+
+  openModal("退费申请 · "+s.name, `
+
+    <div class="confirm-body">
+
+      <div class="confirm-icon" style="background:#fce4ec;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#c62828" stroke-width="2"><path d="M3 7v6a4 4 0 0 0 4 4h9"/><path d="M21 17V7"/><path d="M16 3l5 5-5 5"/></svg></div>
+
+      <div class="confirm-text">退费核算</div>
+
+      <div class="confirm-detail">总课时: ${s.totalHours} | 已消课: ${used} | 剩余: ${s.remainingHours}<br>单价: ${s.unitPrice||0} 元 | 应退金额: <strong style="color:var(--danger)">${amount}</strong> 元</div>
+
+    </div>`, [
+
+    {text:"取消", cls:"btn-secondary", action:"closeModal()"},
+
+    {text:"确认退费", cls:"btn-danger", action:"submitRefund('"+id+"',"+amount+")"}
+
+  ]);
+
+}
+
+
+
+function submitRefund(id, amount) {
+
+  const s = db.students.find(x => x.id === id);
+
+  if (!s) return;
+
+  s.status = "已退费"; s.refundAmount = amount; s.refundDate = today();
+
+  saveData(); closeModal(); renderPage("students");
+
+}
+
+
+
+function doRenewStudent(id) {
+
+  closeModal();
+
+  const s = db.students.find(x => x.id === id);
+
+  if (!s) return;
+
+  openModal("续费 · "+s.name, `
+
+    <div class="form-grid">
+
+      <div class="form-group"><label>续费课时</label><input id="renewHours" type="number" value="40" min="1"></div>
+
+      <div class="form-group"><label>续费金额(元)</label><input id="renewAmount" type="number" value="${40*(s.unitPrice||100)}" min="0"></div>
+
+      <div class="form-group"><label>新有效期开始</label><input id="renewVS" type="date" value="${today()}"></div>
+
+      <div class="form-group"><label>新有效期结束</label><input id="renewVE" type="date" value="${new Date(Date.now()+180*86400000).toISOString().slice(0,10)}"></div>
+
+      <div class="form-group full"><label>备注</label><textarea id="renewRemark" rows="2"></textarea></div>
+
+    </div>`, [
+
+    {text:"取消", cls:"btn-secondary", action:"closeModal()"},
+
+    {text:"确认续费", cls:"btn-success", action:"submitRenew('"+id+"')"}
+
+  ]);
+
+}
+
+
+
+function submitRenew(id) {
+
+  const s = db.students.find(x => x.id === id);
+
+  if (!s) return;
+
+  const h = parseInt(document.getElementById("renewHours").value)||40;
+
+  s.totalHours += h; s.remainingHours += h;
+
+  s.validityStart = document.getElementById("renewVS").value || s.validityStart;
+
+  s.validityEnd = document.getElementById("renewVE").value || s.validityEnd;
+
+  if (s.status==="结业"||s.status==="停课") s.status = "在读";
+
+  s.renewRecord = s.renewRecord||[];
+
+  s.renewRecord.push({date:today(), hours:h, amount:parseInt(document.getElementById("renewAmount").value)||0, remark:document.getElementById("renewRemark").value.trim()});
+
+  saveData(); closeModal(); renderPage("students");
+
+}
+
+// ==================== CLASSES ====================
+
+function renderClasses() {
+
+  const q = (document.getElementById("classSearch")||{}).value||"";
+
+  let list = [...db.classes];
+
+  if (q) list = list.filter(c => c.name.includes(q));
+
+
+
+  return `
+
+    <div class="toolbar">
+
+      <div class="search-box"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input id="classSearch" placeholder="搜索班级名称..." oninput="renderPage(&apos;classes&apos;)"></div>
+
+      <div class="spacer"></div>
+
+      <button class="btn btn-primary" onclick="showAddClass()"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> 创建班级</button>
+
+    </div>
+
+    <div class="card"><div class="card-body">
+
+      <table>
+
+        <thead><tr><th>班级名称</th><th>授课老师</th><th>课程</th><th>上课时间</th><th>教室</th><th>学员数</th><th>状态</th><th>操作</th></tr></thead>
+
+        <tbody>
+
+          ${list.length===0 ? '<tr><td colspan="8"><div class="empty-state"><p>暂无班级数据</p></div></td></tr>' :
+
+          list.map(cls => '<tr><td><strong>'+cls.name+'</strong></td><td>'+cls.teacher+'</td><td>'+(cls.course||"-")+'</td><td style="font-size:12px;">'+(cls.scheduleText||"-")+'</td><td>'+cls.classroom+'</td><td>'+(db.students.filter(function(s){return s.classIds&&s.classIds.indexOf(cls.id)>=0;}).length)+'</td><td>'+statusBadge(cls.status)+'</td><td><div class="actions"><button class="edit-btn" onclick="showClassDetail(\''+cls.id+'\')"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button><button class="edit-btn" onclick="showEditClass(\''+cls.id+'\')"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="danger-btn" onclick="deleteClass(\''+cls.id+'\')"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></div></td></tr>').join("")}
+
+        </tbody>
+
+      </table>
+
+    </div></div>`;
+
+}
+
+
+
+function showAddClass() {
+
+  openModal("创建班级", `
+
+    <div class="form-grid">
+
+      <div class="form-group"><label>班级名称 *</label><input id="clsName" placeholder="如：Python基础班A"></div>
+
+      <div class="form-group"><label>授课老师 *</label><input id="clsTeacher" placeholder="老师姓名"></div>
+
+      <div class="form-group"><label>课程</label><input id="clsCourse" placeholder="如：Python编程"></div>
+
+      <div class="form-group"><label>教室</label><input id="clsRoom" placeholder="如：教室A"></div>
+
+      <div class="form-group full"><label>上课时间安排</label><textarea id="clsSchedule" rows="2" placeholder="如：周二 19:00-21:00&#10;周四 19:00-21:00"></textarea></div>
+
+      <div class="form-group"><label>开课日期</label><input id="clsStart" type="date" value="${today()}"></div>
+
+      <div class="form-group"><label>状态</label><select id="clsStatus"><option value="进行中">进行中</option><option value="已结束">已结束</option></select></div>
+
+    </div>`, [
+
+    {text:"取消", cls:"btn-secondary", action:"closeModal()"},
+
+    {text:"创建", cls:"btn-primary", action:"saveAddClass()"}
+
+  ]);
+
+}
+
+
+
+function saveAddClass() {
+
+  const name = document.getElementById("clsName").value.trim();
+
+  const teacher = document.getElementById("clsTeacher").value.trim();
+
+  if (!name||!teacher) { alert("请填写班级名称和授课老师"); return; }
+
+  db.classes.push({ id:genId("class"), name, teacher, course:document.getElementById("clsCourse").value.trim(), classroom:document.getElementById("clsRoom").value.trim()||"未指定", scheduleText:document.getElementById("clsSchedule").value.trim(), startDate:document.getElementById("clsStart").value, status:document.getElementById("clsStatus").value, studentIds:[], createdAt:today() });
+
+  saveData(); closeModal(); renderPage("classes");
+
+}
+
+
+
+function showClassDetail(id) {
+
+  const cls = db.classes.find(x => x.id === id);
+
+  if (!cls) return;
+
+  const students = db.students.filter(s => s.classIds && s.classIds.includes(id));
+
+  const schedules = db.schedules.filter(s => s.classId === id).slice(-10);
+
+  openModal("班级详情 · "+cls.name, `
+
+    <div class="section-title">基本信息</div>
+
+    <table class="detail-table">
+
+      <tr><td>班级名称</td><td>${cls.name}</td><td>状态</td><td>${statusBadge(cls.status)}</td></tr>
+
+      <tr><td>授课老师</td><td>${cls.teacher}</td><td>教室</td><td>${cls.classroom}</td></tr>
+
+      <tr><td>课程</td><td>${cls.course||"-"}</td><td>学员数</td><td>${students.length}</td></tr>
+
+      <tr><td>上课时间</td><td colspan="3">${cls.scheduleText||"-"}</td></tr>
+
+    </table>
+
+    <div style="margin-top:12px;"><div class="section-title">在班学员</div>
+
+      ${students.length===0?'<div class="empty-state"><p>暂无学员，<a href="javascript:;" onclick="showAssignStudents(\''+cls.id+'\')" style="color:var(--primary)">分配学员</a></p></div>':'<table style="font-size:12px;"><thead><tr><th>姓名</th><th>课时</th><th>状态</th><th>操作</th></tr></thead><tbody>'+students.map(st=>'<tr><td>'+st.name+'</td><td>'+st.remainingHours+'/'+st.totalHours+'</td><td>'+statusBadge(st.status)+'</td><td><button class="btn btn-danger btn-sm" onclick="removeStudentFromClass(\''+st.id+'\',\''+cls.id+'\')">移除</button></td></tr>').join("")+'</tbody></table>'}
+
+      <div style="margin-top:8px;"><button class="btn btn-primary btn-sm" onclick="showAssignStudents(\''+cls.id+'\')">分配学员</button></div>
+
+    </div>
+
+    <div style="margin-top:12px;"><div class="section-title">近期排课</div>
+
+      ${schedules.length===0?'<div class="empty-state"><p>暂无排课</p></div>':'<table style="font-size:12px;"><thead><tr><th>日期</th><th>时间</th><th>教室</th><th>状态</th></tr></thead><tbody>'+schedules.map(sc=>'<tr><td>'+sc.date+'</td><td>'+sc.startTime+'-'+sc.endTime+'</td><td>'+sc.classroom+'</td><td>'+statusBadge(sc.status)+'</td></tr>').join("")+'</tbody></table>'}
+
+    </div>`, [
+
+    {text:"关闭", cls:"btn-secondary", action:"closeModal()"}
+
+  ]);
+
+}
+
+
+
+function showAssignStudents(classId) {
+
+  const cls = db.classes.find(x => x.id === classId);
+
+  if (!cls) return;
+
+  const avail = db.students.filter(s => s.status==="在读" && (!s.classIds||!s.classIds.includes(classId)));
+
+  closeModal();
+
+  openModal("分配学员 - "+cls.name, (avail.length===0?'<div class="empty-state"><p>没有可分配的在读学员</p></div>':'<table style="font-size:13px;"><thead><tr><th style="width:40px;"><input type="checkbox" id="selectAllAssign" onchange="toggleAllAssign()"></th><th>姓名</th><th>课程</th><th>剩余课时</th></tr></thead><tbody>'+avail.map(s=>'<tr><td><input type="checkbox" class="assign-check" value="'+s.id+'"></td><td>'+s.name+'</td><td></td><td>'+s.remainingHours+'</td></tr>').join("")+'</tbody></table>'), [
+
+    {text:"取消", cls:"btn-secondary", action:"closeModal()"},
+
+    {text:"确认分配", cls:"btn-primary", action:"submitAssign('"+classId+"')"}
+
+  ]);
+
+}
+
+
+
+function toggleAllAssign() { const chk=document.getElementById("selectAllAssign"); document.querySelectorAll(".assign-check").forEach(cb=>cb.checked=chk.checked); }
+
+
+
+function submitAssign(classId) {
+
+  const cls = db.classes.find(x => x.id === classId);
+
+  if (!cls) return;
+
+  document.querySelectorAll(".assign-check:checked").forEach(cb => {
+
+    const sid = cb.value;
+
+    const s = db.students.find(x => x.id === sid);
+
+    if (s) { if(!s.classIds) s.classIds=[]; if(!s.classIds.includes(classId)) s.classIds.push(classId); }
+
+    if (!cls.studentIds) cls.studentIds=[]; if(!cls.studentIds.includes(sid)) cls.studentIds.push(sid);
+
+  });
+
+  saveData(); closeModal(); renderPage("classes");
+
+}
+
+
+
+window.removeStudentFromClass = function(sid, cid) {
+
+  if (!confirm("确认从该班级移除该学员？")) return;
+
+  const s=db.students.find(x=>x.id===sid); const c=db.classes.find(x=>x.id===cid);
+
+  if(s&&s.classIds) s.classIds=s.classIds.filter(id=>id!==cid);
+
+  if(c&&cls.studentIds) cls.studentIds=cls.studentIds.filter(id=>id!==sid);
+
+  saveData(); renderPage("classes");
+
+};
+
+
+
+function showEditClass(id) {
+
+  const cls = db.classes.find(x => x.id === id);
+
+  if (!cls) return;
+
+  openModal("编辑班级", `
+
+    <div class="form-grid">
+
+      <div class="form-group"><label>班级名称</label><input id="clsName" value="${cls.name}"></div>
+
+      <div class="form-group"><label>授课老师</label><input id="clsTeacher" value="${cls.teacher}"></div>
+
+      <div class="form-group"><label>课程</label><input id="clsCourse" value="${cls.course||""}"></div>
+
+      <div class="form-group"><label>教室</label><input id="clsRoom" value="${cls.classroom}"></div>
+
+      <div class="form-group full"><label>上课时间</label><textarea id="clsSchedule" rows="2">${cls.scheduleText||""}</textarea></div>
+
+      <div class="form-group"><label>状态</label><select id="clsStatus"><option ${cls.status==="进行中"?"selected":""}>进行中</option><option ${cls.status==="已结束"?"selected":""}>已结束</option></select></div>
+
+    </div>`, [
+
+    {text:"取消", cls:"btn-secondary", action:"closeModal()"},
+
+    {text:"保存", cls:"btn-primary", action:"saveEditClass('"+id+"')"}
+
+  ]);
+
+}
+
+
+
+function saveEditClass(id) {
+
+  const cls = db.classes.find(x => x.id === id);
+
+  if (!cls) return;
+
+  c.name = document.getElementById("clsName").value.trim()||c.name;
+
+  c.teacher = document.getElementById("clsTeacher").value.trim()||c.teacher;
+
+  c.course = document.getElementById("clsCourse").value.trim();
+
+  c.classroom = document.getElementById("clsRoom").value.trim();
+
+  c.scheduleText = document.getElementById("clsSchedule").value.trim();
+
+  c.status = document.getElementById("clsStatus").value;
+
+  saveData(); closeModal(); renderPage("classes");
+
+}
+
+
+
+function deleteClass(id) {
+
+  if (!confirm("确认删除此班级？")) return;
+
+  db.classes = db.classes.filter(x => x.id !== id);
+
+  saveData(); renderPage("classes");
+
+}
+
+// ==================== SCHEDULES ====================
+
+function renderSchedules() {
+
+  const weekDays = ["周日","周一","周二","周三","周四","周五","周六"];
+
+  const now = new Date();
+
+  const dayOfWeek = now.getDay();
+
+  const weekStart = new Date(now);
+
+  weekStart.setDate(now.getDate() - dayOfWeek);
+
+  const weekParam = (window.location.hash||"").match(/week=([^&]*)/);
+
+  let baseDate = weekParam ? new Date(weekParam[1]) : weekStart;
+
+  if (isNaN(baseDate.getTime())) baseDate = weekStart;
+
+  const displayDates = [];
+
+  for (let i = 0; i < 7; i++) { const d = new Date(baseDate); d.setDate(baseDate.getDate() - baseDate.getDay() + i); displayDates.push(d); }
+
+  const dateStrs = displayDates.map(d => d.toISOString().slice(0,10));
+
+  const weekSchedules = db.schedules.filter(s => dateStrs.includes(s.date) && s.status !== "已取消");
+
+  const timeSlots = ["09:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00","20:00","21:00"];
+
+
+
+  const cellMap = {};
+
+  weekSchedules.forEach(sc => {
+
+    const col = dateStrs.indexOf(sc.date);
+
+    if (col < 0) return;
+
+    const key = sc.startTime.slice(0,5) + "-" + col;
+
+    if (!cellMap[key]) cellMap[key] = [];
+
+    cellMap[key].push(sc);
+
+  });
+
+
+
+  const prevWeek = new Date(displayDates[0]); prevWeek.setDate(prevWeek.getDate() - 7);
+
+  const nextWeek = new Date(displayDates[0]); nextWeek.setDate(nextWeek.getDate() + 7);
+
+
+
+  return `
+
+    <div class="toolbar">
+
+      <button class="btn btn-secondary btn-sm" onclick="navigateWeek(\'${prevWeek.toISOString().slice(0,10)}\')"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg> 上周</button>
+
+      <span style="font-weight:500;font-size:14px;">${displayDates[0].toLocaleDateString("zh-CN")} - ${displayDates[6].toLocaleDateString("zh-CN")}</span>
+
+      <button class="btn btn-secondary btn-sm" onclick="navigateWeek(\'${nextWeek.toISOString().slice(0,10)}\')">下周 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></button>
+
+      <button class="btn btn-secondary btn-sm" onclick="navigateWeek(\'\')">本周</button>
+
+      <div class="spacer"></div>
+
+      <button class="btn btn-primary" onclick="showAddSchedule()"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> 添加排课</button>
+
+    </div>
+
+    <div class="card" style="overflow-x:auto;">
+
+      <table class="schedule-table" style="min-width:800px;">
+
+        <thead><tr><th class="time-col">时间</th>${displayDates.map((d,i) => `<th>${weekDays[d.getDay()]}<br><span style="font-weight:400;font-size:11px;color:var(--text-light)">${d.toISOString().slice(5,10)}</span></th>`).join("")}</tr></thead>
+
+        <tbody>${timeSlots.map((time, ti) => `
+
+          <tr><td class="time-col">${time}</td>
+
+            ${displayDates.map((d, di) => {
+
+              const events = cellMap[time+"-"+di] || [];
+
+              return `<td><div class="schedule-cell" onclick="showAddScheduleAt('${d.toISOString().slice(0,10)}','${time}')">
+
+                ${events.map(sc => {
+
+                  const cls = db.classes.find(x => x.id === sc.classId);
+
+                  return `<div class="schedule-event" onclick="event.stopPropagation();showScheduleDetail('${sc.id}')">
+
+                    <strong>${cls?cls.name:"?"}</strong><br>${sc.classroom}<br><span style="font-size:10px;color:#1e40af">${sc.startTime}-${sc.endTime}</span>
+
+                  </div>`;
+
+                }).join("")}
+
+                ${ti < timeSlots.length-1 && events.length===0 ? '<span style="color:var(--text-light);font-size:10px;">+ 添加</span>' : ""}
+
+              </div></td>`;
+
+            }).join("")}
+
+          </tr>`).join("")}
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+    <div style="margin-top:16px;">
+
+      <div class="card"><div class="card-header"><h3>本周课程列表</h3></div>
+
+        <div class="card-body">
+
+          <table><thead><tr><th>日期</th><th>时间</th><th>班级</th><th>老师</th><th>教室</th><th>状态</th><th>操作</th></tr></thead>
+
+            <tbody>${weekSchedules.length===0 ? '<tr><td colspan="7"><div class="empty-state"><p>本周暂无排课</p></div></td></tr>' :
+
+              weekSchedules.sort((a,b)=>a.date.localeCompare(b.date)||a.startTime.localeCompare(b.startTime)).map(sc => {
+
+                const cls = db.classes.find(x => x.id === sc.classId);
+
+                return `<tr><td>${sc.date}</td><td>${sc.startTime}-${sc.endTime}</td><td>${cls?cls.name:"-"}</td><td>${sc.teacher}</td><td>${sc.classroom}</td><td>${statusBadge(sc.status)}</td>
+
+                <td><button class="edit-btn" onclick="showScheduleDetail('${sc.id}')"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button><button class="danger-btn" onclick="cancelSchedule('${sc.id}')"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg></button></td></tr>`;
+
+              }).join("")}
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </div>`;
+
+}
+
+
+
+function navigateWeek(dateStr) {
+
+  if (dateStr) window.location.hash = "#week="+dateStr;
+
+  else window.location.hash = "";
+
+  renderPage("schedules");
+
+}
+
+
+
+function showAddScheduleAt(date, time) { showAddSchedule(date, time); }
+
+
+
+function showAddSchedule(date, time) {
+
+  const defDate = date || today();
+
+  const defTime = time || "09:00";
+
+  const classOpts = db.classes.filter(c=>c.status==="进行中").map(c => '<option value="'+c.id+'">'+c.name+' ('+c.teacher+')</option>').join("");
+
+  openModal("添加排课", `
+
+    <div class="form-grid">
+
+      <div class="form-group"><label>日期 *</label><input id="schDate" type="date" value="${defDate}"></div>
+
+      <div class="form-group"><label>班级 *</label><select id="schClass" onchange="fillScheduleFromClass()"><option value="">选择班级</option>${classOpts}</select></div>
+
+      <div class="form-group"><label>开始时间</label><input id="schStart" type="time" value="${defTime}"></div>
+
+      <div class="form-group"><label>结束时间</label><input id="schEnd" type="time" value="${adjustTime(defTime,2)}"></div>
+
+      <div class="form-group"><label>授课老师</label><input id="schTeacher" readonly style="background:#f8fafc;"></div>
+
+      <div class="form-group"><label>教室</label><input id="schRoom" readonly style="background:#f8fafc;"></div>
+
+    </div>
+
+    <div id="conflictWarn" class="alert alert-warning" style="display:none;margin-top:8px;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> <span id="conflictMsg"></span></div>`, [
+
+    {text:"取消", cls:"btn-secondary", action:"closeModal()"},
+
+    {text:"添加并检查冲突", cls:"btn-primary", action:"saveSchedule()"}
+
+  ]);
+
+}
+
+
+
+window.fillScheduleFromClass = function() {
+
+  const cls = db.classes.find(c => c.id === document.getElementById("schClass").value);
+
+  document.getElementById("schTeacher").value = cls ? cls.teacher : "";
+
+  document.getElementById("schRoom").value = cls ? cls.classroom : "";
+
+};
+
+
+
+function adjustTime(t, h) { if(!t) return "11:00"; const p=t.split(":").map(Number); return String(Math.min(p[0]+h,23)).padStart(2,"0")+":"+String(p[1]).padStart(2,"0"); }
+
+
+
+function saveSchedule() {
+
+  const date=document.getElementById("schDate").value, classId=document.getElementById("schClass").value;
+
+  const st=document.getElementById("schStart").value, en=document.getElementById("schEnd").value;
+
+  const teacher=document.getElementById("schTeacher").value, room=document.getElementById("schRoom").value;
+
+  if(!classId||!date||!st||!en){alert("请填写完整信息");return;}
+
+  if(st>=en){alert("结束时间须晚于开始时间");return;}
+
+  const conflicts = checkConflict(teacher, room, date, st, en, null);
+
+  if(conflicts.length>0){
+
+    document.getElementById("conflictWarn").style.display="flex";
+
+    document.getElementById("conflictMsg").textContent="检测到 "+conflicts.length+" 处冲突！"+conflicts.map(c=>c.date+" "+c.startTime+"-"+c.endTime+" ("+c.teacher+"/"+c.classroom+")").join("; ");
+
+    return;
+
+  }
+
+  db.schedules.push({id:genId("schedule"),classId,date,startTime:st,endTime:en,teacher,classroom:room,status:"待上课",createdAt:today()});
+
+  saveData(); closeModal(); renderPage("schedules");
+
+}
+
+
+
+function showScheduleDetail(id) {
+
+  const sc=db.schedules.find(x=>x.id===id); if(!sc)return;
+
+  const cls=db.classes.find(c=>c.id===sc.classId);
+
+  const atts=db.attendance.filter(a=>a.scheduleId===id);
+
+  openModal("排课详情", `
+
+    <table class="detail-table">
+
+      <tr><td>日期</td><td>${sc.date}</td><td>时间</td><td>${sc.startTime}-${sc.endTime}</td></tr>
+
+      <tr><td>班级</td><td>${cls?cls.name:"-"}</td><td>老师</td><td>${sc.teacher}</td></tr>
+
+      <tr><td>教室</td><td>${sc.classroom}</td><td>状态</td><td>${statusBadge(sc.status)}</td></tr>
+
+    </table>
+
+    ${atts.length?('<div style="margin-top:12px;"><div class="section-title">考勤记录</div><table style="font-size:12px;"><thead><tr><th>学员</th><th>状态</th></tr></thead><tbody>'+atts.map(a=>{const st=db.students.find(x=>x.id===a.studentId);return '<tr><td>'+(st?st.name:"?")+'</td><td>'+statusBadge(a.status)+'</td></tr>';}).join("")+'</tbody></table></div>'):'<div class="empty-state"><p>暂无考勤记录</p></div>'}`, [
+
+    {text:"关闭", cls:"btn-secondary", action:"closeModal()"}
+
+  ]);
+
+}
+
+
+
+window.cancelSchedule = function(id) {
+
+  if(!confirm("确认取消此课程？")) return;
+
+  const sc=db.schedules.find(x=>x.id===id); if(sc)sc.status="已取消";
+
+  saveData(); renderPage("schedules");
+
+};
+
+// ==================== ATTENDANCE ====================
+
+function renderAttendance() {
+
+  const selDate = document.getElementById("attDateFilter") ? document.getElementById("attDateFilter").value : today();
+
+  const daySchedules = db.schedules.filter(s => s.date === selDate && s.status !== "已取消");
+
+
+
+  return `
+
+    <div class="toolbar">
+
+      <label style="font-size:13px;color:var(--text-secondary);">选择日期：</label>
+
+      <input type="date" id="attDateFilter" value="${selDate}" onchange="renderPage(&apos;attendance&apos;)" style="padding:6px 10px;border:1px solid var(--border);border-radius:var(--radius);font-size:13px;">
+
+      <button class="btn btn-secondary btn-sm" onclick="setAttToday()">今天</button>
+
+      <div class="spacer"></div>
+
+      <button class="btn btn-primary" onclick="showManualConsumption()"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="M15 5l4 4"/></svg> 补消课</button>
+
+    </div>
+
+    ${daySchedules.length===0 ? '<div class="card"><div class="card-body"><div class="empty-state"><p>'+selDate+' 暂无课程安排</p></div></div></div>' :
+
+      daySchedules.map(sc => {
+
+        const cls = db.classes.find(c => c.id === sc.classId);
+
+        const students = cls ? db.students.filter(s => s.classIds && s.classIds.includes(cls.id) && s.status==="在读") : [];
+
+        const dayLeaves = db.leaves.filter(l => l.date===selDate && students.some(s=>s.id===l.studentId));
+
+        const existingAtt = db.attendance.filter(a => a.scheduleId === sc.id);
+
+        return '<div class="card" style="margin-bottom:12px;">'+
+
+          '<div class="card-header"><h3>'+(cls?cls.name:"未知班级")+' · '+sc.startTime+"-"+sc.endTime+'</h3><span>'+(sc.status==="已上课"?"✅ 已考勤":"⏳ 待考勤")+'</span></div>'+
+
+          '<div class="card-body">'+
+
+          (students.length===0?'<div style="padding:12px;color:var(--text-secondary);">该班暂无在读学员</div>':
+
+          '<table><thead><tr><th>学员</th><th>剩余课时</th><th>考勤状态</th><th>操作</th></tr></thead><tbody>'+
+
+          students.map(st => {
+
+            const att = existingAtt.find(a=>a.studentId===st.id);
+
+            const isLeaved = dayLeaves.some(l=>l.studentId===st.id);
+
+            const curStatus = att?att.status:(isLeaved?"已请假":"-");
+
+            return '<tr><td>'+st.name+'</td><td>'+st.remainingHours+'</td><td>'+(curStatus==="-"?statusBadge("待上课"):statusBadge(curStatus))+'</td><td>'+
+
+              (sc.status==="待上课"?'<button class="btn btn-success btn-sm" onclick="markAtt(\''+sc.id+'\',\''+st.id+'\',\'出勤\')" '+(curStatus==="出勤"?"disabled style='opacity:0.5'":"")+'>出勤</button> '+
+
+              '<button class="btn btn-warning btn-sm" onclick="markAtt(\''+sc.id+'\',\''+st.id+'\',\'请假\')" '+(curStatus==="请假"||isLeaved?"disabled style='opacity:0.5'":"")+'>请假</button> '+
+
+              '<button class="btn btn-secondary btn-sm" onclick="markAtt(\''+sc.id+'\',\''+st.id+'\',\'旷课\')" '+(curStatus==="旷课"?"disabled style='opacity:0.5'":"")+'>旷课</button>'
+
+              :(att?'<span style="font-size:12px;color:var(--text-secondary)">已记录 · '+att.status+'</span>':"-"))+'</td></tr>';
+
+          }).join("")+'</tbody></table>')+
+
+          '<div style="padding:8px 16px;border-top:1px solid var(--border);display:flex;gap:8px;">'+
+
+          '<span style="font-size:12px;color:var(--text-secondary);">已签到: '+existingAtt.filter(a=>a.status==="出勤").length+'/'+students.length+'</span>'+
+
+          (sc.status==="待上课"&&existingAtt.length>0?'<button class="btn btn-primary btn-sm" onclick="confirmAtt(\''+sc.id+'\')">确认完成考勤</button>':"")+
+
+          (sc.status==="待上课"?'<button class="btn btn-danger btn-sm" onclick="cancelSchedule(\''+sc.id+'\')">取消课程</button>':"")+
+
+          (existingAtt.length>0&&sc.status==="已上课"?'<button class="btn btn-secondary btn-sm" onclick="showFixAttendance(\''+sc.id+'\')">修正考勤</button>':"")+
+
+          '</div></div></div>';
+
+      }).join("")}`;
+
+}
+
+
+
+function setAttToday() {
+
+  const el=document.getElementById("attDateFilter");
+
+  if(el)el.value=today();
+
+  renderPage("attendance");
+
+}
+
+
+
+window.markAtt = function(scheduleId, studentId, status) {
+
+  const idx = db.attendance.findIndex(a => a.scheduleId===scheduleId && a.studentId===studentId);
+
+  if(idx>=0) db.attendance[idx].status=status;
+
+  else db.attendance.push({id:genId("attendance"),scheduleId,studentId,status,date:today(),createdAt:now()});
+
+  saveData(); renderPage("attendance");
+
+};
+
+
+
+window.confirmAtt = function(scheduleId) {
+
+  if(!confirm("确认完成本次考勤？系统将自动扣减出勤学员的课时。")) return;
+
+  const sc=db.schedules.find(s=>s.id===scheduleId);
+
+  if(sc) sc.status="已上课";
+
+  db.attendance.filter(a=>a.scheduleId===scheduleId).forEach(a=>{if(a.status==="出勤")processAttendance(scheduleId,a.studentId,"出勤");});
+
+  saveData(); renderPage("attendance");
+
+};
+
+
+
+function showFixAttendance(scheduleId) {
+
+  const atts=db.attendance.filter(a=>a.scheduleId===scheduleId);
+
+  openModal("考勤修正", '<p style="font-size:13px;color:var(--text-secondary);margin-bottom:12px;">请求修改考勤记录，需教务审核确认。</p><table style="font-size:12px;"><thead><tr><th>学员</th><th>当前状态</th><th>修正为</th></tr></thead><tbody>'+
+
+    atts.map(a => {
+
+      const st=db.students.find(x=>x.id===a.studentId);
+
+      return '<tr><td>'+(st?st.name:"?")+'</td><td>'+statusBadge(a.status)+'</td><td><select id="fixAtt_'+a.id+'"><option value="出勤" '+(a.status==="出勤"?"selected":"")+'>出勤</option><option value="请假" '+(a.status==="请假"?"selected":"")+'>请假</option><option value="旷课" '+(a.status==="旷课"?"selected":"")+'>旷课</option></select></td></tr>';
+
+    }).join("")+'</tbody></table>', [
+
+    {text:"取消", cls:"btn-secondary", action:"closeModal()"},
+
+    {text:"审核通过并修正", cls:"btn-primary", action:"submitFixAttendance('"+scheduleId+"')"}
+
+  ]);
+
+}
+
+
+
+function submitFixAttendance(scheduleId) {
+
+  db.attendance.filter(a=>a.scheduleId===scheduleId).forEach(a => {
+
+    const ns=document.getElementById("fixAtt_"+a.id).value;
+
+    if(ns!==a.status){
+
+      if(a.status==="出勤"&&ns!=="出勤"){const s=db.students.find(x=>x.id===a.studentId);if(s)s.remainingHours+=1;db.consumptions=db.consumptions.filter(c=>!(c.scheduleId===scheduleId&&c.studentId===a.studentId));}
+
+      if(ns==="出勤"&&a.status!=="出勤")processAttendance(scheduleId,a.studentId,"出勤");
+
+      a.status=ns;
+
+    }
+
+  });
+
+  saveData(); closeModal(); renderPage("attendance");
+
+}
+
+
+
+function showManualConsumption() {
+
+  const active=db.students.filter(s=>s.status==="在读"&&s.remainingHours>0);
+
+  openModal("补消课", `
+
+    <div class="form-grid">
+
+      <div class="form-group full"><label>学员 *</label><select id="manualStu"><option value="">选择学员</option>${active.map(s=>'<option value="'+s.id+'">'+s.name+'（剩余'+s.remainingHours+'课时）</option>').join("")}</select></div>
+
+      <div class="form-group"><label>消课时长</label><input id="manualHours" type="number" value="1" min="1"></div>
+
+      <div class="form-group"><label>消课日期</label><input id="manualDate" type="date" value="${today()}"></div>
+
+      <div class="form-group full"><label>补录原因 *</label><textarea id="manualReason" rows="2" placeholder="如：历史遗漏考勤，补录消课"></textarea></div>
+
+    </div>`, [
+
+    {text:"取消", cls:"btn-secondary", action:"closeModal()"},
+
+    {text:"确认补录", cls:"btn-primary", action:"submitManualConsumption()"}
+
+  ]);
+
+}
+
+
+
+function submitManualConsumption() {
+
+  const sid=document.getElementById("manualStu").value, h=parseInt(document.getElementById("manualHours").value)||1, date=document.getElementById("manualDate").value, r=document.getElementById("manualReason").value.trim();
+
+  if(!sid){alert("请选择学员");return;} if(!r){alert("请填写补录原因");return;}
+
+  const s=db.students.find(x=>x.id===sid);
+
+  if(s){s.remainingHours=Math.max(0,s.remainingHours-h);db.consumptions.push({id:genId("consumption"),studentId:sid,scheduleId:"manual",hours:h,date,type:"补消课",remark:r});if(s.remainingHours===0&&s.status==="在读")s.status="结业";}
+
+  saveData(); closeModal(); renderPage("attendance");
+
+}
+
+// ==================== LEAVES & MAKEUPS ====================
+
+function renderLeaves() {
+
+  const students = db.students.filter(s => s.status==="在读");
+
+  return `
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+
+      <div>
+
+        <div class="card"><div class="card-header"><h3>请假登记</h3></div>
+
+          <div class="card-body" style="padding:16px;">
+
+            <div class="form-grid">
+
+              <div class="form-group full"><label>请假学员 *</label><select id="leaveStudent"><option value="">选择学员</option>${students.map(s=>'<option value="'+s.id+'">'+s.name+'（ · 剩余'+s.remainingHours+'课时）</option>').join("")}</select></div>
+
+              <div class="form-group"><label>请假日期 *</label><input id="leaveDate" type="date" value="${today()}"></div>
+
+              <div class="form-group"><label>请假原因</label><select id="leaveReason"><option>生病</option><option>事假</option><option>考试</option><option>其他</option></select></div>
+
+              <div class="form-group full"><label>备注</label><textarea id="leaveNote" rows="2"></textarea></div>
+
+            </div>
+
+            <button class="btn btn-primary" style="margin-top:8px;" onclick="submitLeave()">提交请假</button>
+
+          </div>
+
+        </div>
+
+        <div class="card" style="margin-top:16px;"><div class="card-header"><h3>补课安排</h3></div>
+
+          <div class="card-body" style="padding:16px;">
+
+            <div class="form-grid">
+
+              <div class="form-group full"><label>请假学员 *</label><select id="makeupStudent"><option value="">选择学员</option>${students.map(s=>'<option value="'+s.id+'">'+s.name+'（ · 剩余'+s.remainingHours+'课时）</option>').join("")}</select></div>
+
+              <div class="form-group full"><label>补课日期 *</label><input id="makeupDate" type="date" value="${today()}"></div>
+
+              <div class="form-group full"><label>补课方式</label><select id="makeupMethod" onchange="toggleMakeupClass()"><option value="same">插入同进度班级</option><option value="individual">单独安排补课</option></select></div>
+
+              <div class="form-group full" id="makeupClassGroup"><label>选择班级</label><select id="makeupClass"><option value="">选择班级</option>${db.classes.filter(c=>c.status==="进行中").map(c=>'<option value="'+c.id+'">'+c.name+'</option>').join("")}</select></div>
+
+              <div class="form-group full"><label>备注</label><textarea id="makeupNote" rows="2"></textarea></div>
+
+            </div>
+
+            <button class="btn btn-primary" style="margin-top:8px;" onclick="submitMakeup()">安排补课</button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div>
+
+        <div class="card"><div class="card-header"><h3>请假记录</h3></div>
+
+          <div class="card-body">
+
+            <table><thead><tr><th>学员</th><th>日期</th><th>原因</th><th>状态</th></tr></thead>
+
+              <tbody>${db.leaves.length===0?'<tr><td colspan="4"><div class="empty-state"><p>暂无请假记录</p></div></td></tr>'
+
+                :db.leaves.slice(-15).reverse().map(l=>{const st=db.students.find(x=>x.id===l.studentId);return '<tr><td>'+(st?st.name:"?")+'</td><td>'+l.date+'</td><td>'+l.reason+'</td><td>'+statusBadge(l.status)+'</td></tr>';}).join("")}
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+        </div>
+
+        <div class="card" style="margin-top:16px;"><div class="card-header"><h3>补课记录</h3></div>
+
+          <div class="card-body">
+
+            <table><thead><tr><th>学员</th><th>补课日期</th><th>方式</th><th>状态</th></tr></thead>
+
+              <tbody>${db.makeups.length===0?'<tr><td colspan="4"><div class="empty-state"><p>暂无补课记录</p></div></td></tr>'
+
+                :db.makeups.slice(-15).reverse().map(m=>{const st=db.students.find(x=>x.id===m.studentId);return '<tr><td>'+(st?st.name:"?")+'</td><td>'+m.makeupDate+'</td><td>'+(m.method==="same"?"跟班补课":"单独补课")+'</td><td>'+statusBadge(m.status)+'</td></tr>';}).join("")}
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>`;
+
+}
+
+
+
+function toggleMakeupClass() {
+
+  document.getElementById("makeupClassGroup").style.display = document.getElementById("makeupMethod").value==="same" ? "" : "none";
+
+}
+
+
+
+function submitLeave() {
+
+  const sid=document.getElementById("leaveStudent").value, date=document.getElementById("leaveDate").value, reason=document.getElementById("leaveReason").value, note=document.getElementById("leaveNote").value.trim();
+
+  if(!sid||!date){alert("请选择学员和请假日期");return;}
+
+  db.leaves.push({id:genId("leave"),studentId:sid,date,reason,note,status:"已批准",createdAt:today()});
+
+  const st=db.students.find(x=>x.id===sid);
+
+  if(st&&st.classIds) st.classIds.forEach(clsId=>{
+
+    db.schedules.filter(s=>s.classId===clsId&&s.date===date&&s.status==="待上课").forEach(sc=>{
+
+      const idx=db.attendance.findIndex(a=>a.scheduleId===sc.id&&a.studentId===sid);
+
+      if(idx<0) db.attendance.push({id:genId("attendance"),scheduleId:sc.id,studentId:sid,status:"请假",date,createdAt:now()});
+
+      else db.attendance[idx].status="请假";
+
+    });
+
+  });
+
+  saveData(); renderPage("leaves");
+
+}
+
+
+
+function submitMakeup() {
+
+  const sid=document.getElementById("makeupStudent").value, date=document.getElementById("makeupDate").value, method=document.getElementById("makeupMethod").value, clsId=document.getElementById("makeupClass").value, note=document.getElementById("makeupNote").value.trim();
+
+  if(!sid||!date){alert("请选择学员和补课日期");return;}
+
+  if(method==="same"&&!clsId){alert("选择跟班补课请指定班级");return;}
+
+  db.makeups.push({id:genId("makeup"),studentId:sid,makeupDate:date,method,classId:method==="same"?clsId:"",status:"待补课",note,createdAt:today()});
+
+  saveData(); renderPage("leaves");
+
+}
+
+// ==================== FINANCE ====================
+
+function renderFinance() {
+
+  const cm = today().slice(0,7);
+
+  const monthCons = db.consumptions.filter(c => c.date.startsWith(cm));
+
+  const teacherMap = {};
+
+  db.schedules.forEach(sc => {
+
+    if(!sc.date.startsWith(cm)||sc.status==="已取消") return;
+
+    if(!teacherMap[sc.teacher]) teacherMap[sc.teacher]={classes:0,students:0};
+
+    teacherMap[sc.teacher].classes++;
+
+    teacherMap[sc.teacher].students += db.attendance.filter(a=>a.scheduleId===sc.id&&a.status==="出勤").length;
+
+  });
+
+  const existingFin = db.finances.filter(f=>f.month===cm);
+
+  const totalIncome = monthCons.length * 100;
+
+
+
+  return `
+
+    <div class="stats-grid">
+
+      <div class="stat-card"><div class="stat-label">${cm} 月消课总数</div><div class="stat-value">${monthCons.length}</div><div class="stat-sub">课时</div></div>
+
+      <div class="stat-card"><div class="stat-label">预估消课收入</div><div class="stat-value">¥${totalIncome}</div><div class="stat-sub">按100元/课时估算</div></div>
+
+      <div class="stat-card"><div class="stat-label">本月授课老师</div><div class="stat-value">${Object.keys(teacherMap).length}</div><div class="stat-sub">${cm}</div></div>
+
+      <div class="stat-card"><div class="stat-label">已结算</div><div class="stat-value">${existingFin.filter(f=>f.status==="已结算").length}</div><div class="stat-sub">/${existingFin.length} 条记录</div></div>
+
+    </div>
+
+    <div class="card" style="margin-bottom:16px;">
+
+      <div class="card-header"><h3>老师课时结算 (${cm})</h3><button class="btn btn-primary btn-sm" onclick="exportMonthlyReport()">导出月度报表</button></div>
+
+      <div class="card-body">
+
+        <table><thead><tr><th>授课老师</th><th>本月课时数</th><th>出勤学员数</th><th>结算金额</th><th>状态</th><th>操作</th></tr></thead>
+
+          <tbody>${Object.keys(teacherMap).length===0?'<tr><td colspan="6"><div class="empty-state"><p>本月暂无授课数据</p></div></td></tr>'
+
+            :Object.entries(teacherMap).map(([t,d])=>{
+
+              const fin=existingFin.find(f=>f.teacher===t);
+
+              const amt=d.classes*150;
+
+              return '<tr><td><strong>'+t+'</strong></td><td>'+d.classes+'</td><td>'+d.students+'</td><td><strong>¥'+amt+'</strong></td><td>'+statusBadge(fin?fin.status:"待结算")+'</td><td>'+(fin&&fin.status==="已结算"?'<span style="font-size:12px;color:var(--text-secondary)">已结</span>':'<button class="btn btn-success btn-sm" onclick="settleTeacher(\''+t+'\')">结算</button>')+'</td></tr>';
+
+            }).join("")}
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+
+    <div class="card"><div class="card-header"><h3>近期消课明细</h3></div>
+
+      <div class="card-body">
+
+        <table><thead><tr><th>日期</th><th>学员</th><th>课时</th><th>类型</th><th>备注</th></tr></thead>
+
+          <tbody>${db.consumptions.length===0?'<tr><td colspan="5"><div class="empty-state"><p>暂无消课记录</p></div></td></tr>'
+
+            :db.consumptions.slice(-20).reverse().map(c=>{const st=db.students.find(x=>x.id===c.studentId);return '<tr><td>'+c.date+'</td><td>'+(st?st.name:"?")+'</td><td>'+c.hours+'</td><td>'+c.type+'</td><td style="color:var(--text-secondary);font-size:12px;">'+(c.remark||"-")+'</td></tr>';}).join("")}
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </div>`;
+
+}
+
+
+
+window.settleTeacher = function(teacher) {
+
+  if(!confirm("确认结算 "+teacher+" 的本月课时费？")) return;
+
+  const cm=today().slice(0,7);
+
+  const idx=db.finances.findIndex(f=>f.teacher===teacher&&f.month===cm);
+
+  if(idx>=0) db.finances[idx].status="已结算";
+
+  else db.finances.push({id:genId("finance"),month:cm,teacher,status:"已结算",settledAt:today()});
+
+  saveData(); renderPage("finance");
+
+};
+
+
+
+window.exportMonthlyReport = function() {
+
+  const cm=today().slice(0,7);
+
+  let lines=["=== "+cm+" 月度消课报表 ===","","学员消课明细:"];
+
+  db.consumptions.filter(c=>c.date.startsWith(cm)).forEach(c=>{const st=db.students.find(x=>x.id===c.studentId);lines.push("  "+c.date+" | "+(st?st.name:"?")+" | "+c.hours+"课时 | "+c.type+" | "+(c.remark||"-"));});
+
+  lines.push("","老师结算:");
+
+  const td={}; db.schedules.filter(s=>s.date.startsWith(cm)&&s.status!=="已取消").forEach(sc=>{if(!td[sc.teacher])td[sc.teacher]={c:0,s:0};td[sc.teacher].c++;td[sc.teacher].s+=db.attendance.filter(a=>a.scheduleId===sc.id&&a.status==="出勤").length;});
+
+  Object.entries(td).forEach(([t,d])=>lines.push("  "+t+": "+d.c+"节课, "+d.s+"出勤, 金额 ¥"+(d.c*150)));
+
+  lines.push("","--- 报表导出时间: "+now()+" ---");
+
+  const blob=new Blob([lines.join("\n")],{type:"text/plain;charset=utf-8"});
+
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="月度报表_"+cm+".txt"; a.click(); URL.revokeObjectURL(a.href);
+
+};
+
+// ==================== REPORTS ====================
+
+function renderReports() {
+
+  const totalLeads=db.leads.length, converted=db.leads.filter(l=>l.status==="已报名").length, convRate=totalLeads>0?((converted/totalLeads*100).toFixed(1)):0;
+
+  const sc={"在读":0,"停课":0,"结业":0,"已退费":0}; db.students.forEach(s=>{if(sc[s.status]!==undefined)sc[s.status]++;});
+
+  const lossReasons={}; db.leads.filter(l=>l.status==="无效").forEach(l=>{const r=l.invalidReason||"其他";lossReasons[r]=(lossReasons[r]||0)+1;});
+
+  const monthlyData={}; for(let i=5;i>=0;i--){const d=new Date();d.setMonth(d.getMonth()-i);const k=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0");monthlyData[k]={c:0,e:0};}
+
+  db.consumptions.forEach(c=>{const k=c.date.slice(0,7);if(monthlyData[k])monthlyData[k].c++;});
+
+  db.leads.filter(l=>l.status==="已报名").forEach(l=>{const k=(l.createdAt||"").slice(0,7);if(monthlyData[k])monthlyData[k].e++;});
+
+  const srcMap={}; db.leads.forEach(l=>{const s=l.source||"其他";srcMap[s]=(srcMap[s]||0)+1;});
+
+
+
+  return `
+
+    <div class="stats-grid">
+
+      <div class="stat-card"><div class="stat-label">线索总数</div><div class="stat-value">${totalLeads}</div><div class="stat-sub">转化率 ${convRate}%</div></div>
+
+      <div class="stat-card"><div class="stat-label">学员总数</div><div class="stat-value">${db.students.length}</div><div class="stat-sub">在读 ${sc["在读"]}</div></div>
+
+      <div class="stat-card"><div class="stat-label">总请假数</div><div class="stat-value">${db.leaves.length}</div><div class="stat-sub">已补课 ${db.makeups.filter(m=>m.status==="已完成").length}</div></div>
+
+      <div class="stat-card"><div class="stat-label">总消课数</div><div class="stat-value">${db.consumptions.length}</div><div class="stat-sub">总排课 ${db.schedules.length}</div></div>
+
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+
+      <div class="card"><div class="card-header"><h3>学员状态分布</h3></div>
+
+        <div class="card-body" style="padding:16px;">${Object.entries(sc).map(([k,v])=>{
+
+          const pct=db.students.length>0?(v/db.students.length*100).toFixed(1):0;
+
+          const colors={"在读":"var(--success)","停课":"var(--warning)","结业":"var(--text-light)","已退费":"var(--danger)"};
+
+          return '<div style="margin-bottom:8px;"><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:3px;"><span>'+k+'</span><span>'+v+'人 ('+pct+'%)</span></div><div style="height:8px;background:var(--bg);border-radius:4px;overflow:hidden;"><div style="height:100%;width:'+pct+'%;background:'+(colors[k]||"var(--primary)")+';border-radius:4px;"></div></div></div>';
+
+        }).join("")}</div></div>
+
+      <div class="card"><div class="card-header"><h3>线索来源分析</h3></div>
+
+        <div class="card-body" style="padding:16px;">${Object.keys(srcMap).length===0?'<div class="empty-state"><p>暂无数据</p></div>':Object.entries(srcMap).map(([src,cnt])=>{
+
+          const pct=totalLeads>0?(cnt/totalLeads*100).toFixed(1):0;
+
+          return '<div style="margin-bottom:8px;"><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:3px;"><span>'+src+'</span><span>'+cnt+'条 ('+pct+'%)</span></div><div style="height:8px;background:var(--bg);border-radius:4px;overflow:hidden;"><div style="height:100%;width:'+pct+'%;background:var(--primary-light);border-radius:4px;"></div></div></div>';
+
+        }).join("")}</div></div>
+
+      <div class="card"><div class="card-header"><h3>月度趋势 (近6个月)</h3></div>
+
+        <div class="card-body" style="padding:16px;"><table style="font-size:12px;"><thead><tr><th>月份</th><th>消课数</th><th>新报名</th></tr></thead><tbody>${Object.entries(monthlyData).map(([m,d]) => '<tr><td>'+m+'</td><td>'+d.c+'</td><td>'+d.e+'</td></tr>').join("")}</tbody></table></div></div>
+
+      <div class="card"><div class="card-header"><h3>线索流失原因</h3></div>
+
+        <div class="card-body" style="padding:16px;">${Object.keys(lossReasons).length===0?'<div class="empty-state"><p>暂无流失数据</p></div>':Object.entries(lossReasons).map(([r,c]) => '<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px;"><span>'+r+'</span><span style="color:var(--danger);font-weight:600;">'+c+'人</span></div>').join("")}</div></div>
+
+    </div>
+
+    <div style="margin-top:16px;">
+
+      <div class="card"><div class="card-header"><h3>全流程数据总览</h3></div>
+
+        <div class="card-body" style="padding:16px;">
+
+          <table class="detail-table" style="font-size:13px;">
+
+            <tr><td>线索 → 试听</td><td>${db.leads.filter(l=>l.status==="已试听"||l.status==="已报名").length}</td><td>线索 → 报名</td><td>${converted}</td></tr>
+
+            <tr><td>在读学员</td><td>${sc["在读"]}</td><td>停课学员</td><td>${sc["停课"]}</td></tr>
+
+            <tr><td>已结业</td><td>${sc["结业"]}</td><td>已退费</td><td>${sc["已退费"]}</td></tr>
+
+            <tr><td>总消课量</td><td>${db.consumptions.length}</td><td>总排课量</td><td>${db.schedules.length}</td></tr>
+
+            <tr><td>请假总数</td><td>${db.leaves.length}</td><td>已补课</td><td>${db.makeups.filter(m=>m.status==="已完成").length}</td></tr>
+
+          </table>
+
+        </div></div>
+
+    </div>`;
+
+}
+
+
+
+// ==================== MODAL SYSTEM ====================
+
+function openModal(title, bodyHtml, buttons) {
+
+  document.getElementById("modalTitle").textContent = title;
+
+  document.getElementById("modalBody").innerHTML = bodyHtml;
+
+  const footer = document.getElementById("modalFooter");
+
+  footer.innerHTML = buttons.map(b => {
+
+    const action = b.action || "closeModal()";
+
+    return '<button class="btn '+b.cls+'" onclick="'+action+'">'+b.text+'</button>';
+
+  }).join(" ");
+
+  document.getElementById("modalOverlay").classList.add("active");
+
+}
+
+
+
+function closeModal() {
+
+  document.getElementById("modalOverlay").classList.remove("active");
+
+}
+
+
+
+document.getElementById("modalOverlay").addEventListener("click", function(e) {
+
+  if(e.target===this) closeModal();
+
+});
+
+
+
+// ==================== CLOCK & INIT ====================
+
+function updateClock() {
+
+  document.getElementById("clockDisplay").textContent = new Date().toLocaleString("zh-CN");
+
+}
+
+
+
+
+function seedSampleData() {
+  
+  var lastNames = ['张','李','王','刘','陈','杨','赵','黄','周','吴','徐','孙','马','朱','胡','郭','何','高','林','罗','郑','梁','谢','宋','唐','韩','曹','许','邓','萧','冯','曾','程','蔡','彭','潘','袁','于','董','余','叶','蒋','杜','苏','魏','吕','丁','任','沈','姚'];
+  var firstNames = ['伟','芳','娜','敏','静','强','磊','军','洋','勇','艳','杰','涛','明','超','华','亮','飞','雪','峰','婷','琳','平','刚','文','辉','玲','丽','娟','霞','琴','斌','浩','鑫','宇','轩','涵','萱','睿','翰','哲','博'];
+  var courses = ['Python基础', 'Python进阶', 'Python数据分析', 'Python爬虫', 'PythonWeb开发'];
+  var sources = ['线下推广', '线上广告', '老带新', '自然到店', '转介绍'];
+  var leadStatuses = ['新线索', '已跟进', '已试听', '已报名', '无效'];
+  var packages = ['基础班(40课时)', '提高班(60课时)', 'VIP一对一(20课时)'];
+  var totalHoursArr = [40, 60, 20, 80];
+  var unitPrices = [80, 100, 120, 150, 200];
+
+  function rand(n) { return Math.floor(Math.random() * n); }
+  function randName() { return lastNames[rand(lastNames.length)] + firstNames[rand(firstNames.length)] + (rand(3)>1?firstNames[rand(firstNames.length)]:''); }
+  function randPhone() { var p='1'+[3,5,7,8,9][rand(5)]; for(var i=0;i<9;i++) p+=rand(10); return p; }
+
+  var leadCount = 10;
+  var leads = [];
+  for (var i = 0; i < leadCount; i++) {
+    leads.push({
+      id: 'L' + String(i+1).padStart(3,'0'),
+      name: randName(),
+      phone: randPhone(),
+      '意向课程': courses[rand(courses.length)],
+      source: sources[rand(sources.length)],
+      status: leadStatuses[rand(3)],
+      followUps: [{date: '2026-07-0'+(rand(9)+1), content: '电话沟通情况良好', nextAction: '安排试听'}],
+      createdAt: '2026-06-' + String(rand(28)+1).padStart(2,'0')
+    });
+  }
+  db.leads = leads;
+
+  var studentCount = 60;
+  var students = [];
+  var allStudentIds = [];
+  for (var i = 0; i < studentCount; i++) {
+    var sid = 'S' + String(i+1).padStart(3,'0');
+    allStudentIds.push(sid);
+    var totalH = totalHoursArr[rand(totalHoursArr.length)];
+    var remainH = rand(totalH + 1);
+    students.push({
+      id: sid,
+      name: randName(),
+      phone: randPhone(),
+      course: courses[rand(courses.length)],
+      package: packages[rand(packages.length)],
+      totalHours: totalH,
+      remainingHours: remainH,
+      unitPrice: unitPrices[rand(unitPrices.length)],
+      validityStart: '2026-07-01',
+      validityEnd: '2026-12-31',
+      status: remainH === 0 ? '结业' : '在读',
+      classIds: [],
+      createdAt: '2026-06-' + String(rand(28)+1).padStart(2,'0')
+    });
+  }
+  db.students = students;
+
+  var classNames = ['Python编程A班', 'Python编程B班'];
+  var teachers = ['王老师', '李老师', '张老师', '雷老师'];
+  var classData = [
+    {teacher:'王老师', room:'教室A', schedule:'周二 19:00-21:00\n周四 19:00-21:00'},
+    {teacher:'李老师', room:'教室B', schedule:'周三 19:00-21:00\n周五 19:00-21:00'}
+  ];
+
+  var classes = [];
+  for (var i = 0; i < 2; i++) {
+    var cid = 'C' + String(i+1).padStart(3,'0');
+    var startIdx = i * 30;
+    var classStudentIds = [];
+    for (var j = 0; j < 30; j++) {
+      var si = startIdx + j;
+      var sid = allStudentIds[si];
+      classStudentIds.push(sid);
+      students[si].classIds = [cid];
+    }
+    classes.push({
+      id: cid,
+      name: classNames[i],
+      teacher: classData[i].teacher,
+      course: courses[i],
+      classroom: classData[i].room,
+      scheduleText: classData[i].schedule,
+      startDate: '2026-07-01',
+      status: '进行中',
+      studentIds: classStudentIds,
+      createdAt: '2026-06-20'
+    });
+  }
+  db.classes = classes;
+  db.students = students;
+
+  // Generate some schedules for the next 2 weeks
+  var schedules = [];
+  var scId = 1;
+  var weekDays = [2, 4];  // A class: Tue, Thu
+  var weekDays2 = [3, 5]; // B class: Wed, Fri
+  for (var week = 0; week < 2; week++) {
+    for (var d = 0; d < weekDays.length; d++) {
+      var dayA = weekDays[d] + week * 7;
+      var dayB = weekDays2[d] + week * 7;
+      var dateA = new Date(2026, 6, 6 + dayA);
+      var dateB = new Date(2026, 6, 6 + dayB);
+      if (dateA <= new Date(2026, 6, 12)) continue;
+      schedules.push({
+        id: 'SC' + String(scId++).padStart(3,'0'),
+        classId: 'C001',
+        date: dateA.getFullYear() + '-' + String(dateA.getMonth()+1).padStart(2,'0') + '-' + String(dateA.getDate()).padStart(2,'0'),
+        startTime: '19:00', endTime: '21:00',
+        teacher: '王老师', classroom: '教室A',
+        status: '待上课', createdAt: '2026-06-20'
+      });
+      if (dateB <= new Date(2026, 6, 12)) continue;
+      schedules.push({
+        id: 'SC' + String(scId++).padStart(3,'0'),
+        classId: 'C002',
+        date: dateB.getFullYear() + '-' + String(dateB.getMonth()+1).padStart(2,'0') + '-' + String(dateB.getDate()).padStart(2,'0'),
+        startTime: '19:00', endTime: '21:00',
+        teacher: '李老师', classroom: '教室B',
+        status: '待上课', createdAt: '2026-06-20'
+      });
+    }
+  }
+  db.schedules = schedules;
+
+  // Update nextId
+  db.nextId = { lead: 11, student: 61, class: 3, schedule: scId, attendance: 1, leave: 1, makeup: 1, consumption: 1, finance: 1 };
+
+  saveData();
+  console.log('数据初始化完成：' + leads.length + '条线索，' + students.length + '名学员，' + classes.length + '个班级，' + schedules.length + '节课');
+}
+
+function init() {
+  if (db.classes.length === 0) { seedSampleData(); }
+
+  initSidebar();
+
+  renderPage("dashboard");
+
+  updateClock();
+
+  setInterval(updateClock, 1000);
+
+}
+
+
+
+window.addEventListener("hashchange", () => {
+
+  if(currentPage==="schedules") renderPage("schedules");
+
+});
+
+
+
+// Make key functions globally accessible
+
+window.showAddLead = showAddLead;
+
+window.showEditLead = showEditLead;
+
+window.showLeadDetail = showLeadDetail;
+
+window.deleteLead = deleteLead;
+
+window.doFollowUp = doFollowUp;
+
+window.doScheduleTrial = doScheduleTrial;
+
+window.doEnroll = doEnroll;
+
+window.doMarkInvalid = doMarkInvalid;
+
+window.showAddStudent = showAddStudent;
+
+window.showStudentDetail = showStudentDetail;
+
+window.showEditStudent = showEditStudent;
+
+window.deleteStudent = deleteStudent;
+
+window.doPauseStudent = doPauseStudent;
+
+window.doResumeStudent = doResumeStudent;
+
+window.doTransferClass = doTransferClass;
+
+window.doRefundStudent = doRefundStudent;
+
+window.doRenewStudent = doRenewStudent;
+
+window.showAddClass = showAddClass;
+
+window.showClassDetail = showClassDetail;
+
+window.showEditClass = showEditClass;
+
+window.deleteClass = deleteClass;
+
+window.showAddSchedule = showAddSchedule;
+
+window.showScheduleDetail = showScheduleDetail;
+
+window.showManualConsumption = showManualConsumption;
+
+window.showFixAttendance = showFixAttendance;
+
+window.showAssignStudents = showAssignStudents;
+
+window.submitLeave = submitLeave;
+
+window.submitMakeup = submitMakeup;
+
+window.navigateWeek = navigateWeek;
+
+window.renderPage = renderPage;
+
+window.closeModal = closeModal;
+
+window.openModal = openModal;
+
+window.saveLead = saveLead;
+
+window.saveEditLead = saveEditLead;
+
+window.submitFollowUp = submitFollowUp;
+
+window.submitTrial = submitTrial;
+
+window.submitEnroll = submitEnroll;
+
+window.submitInvalid = submitInvalid;
+
+window.saveAddStudent = saveAddStudent;
+
+window.saveEditStudent = saveEditStudent;
+
+window.submitPause = submitPause;
+
+window.submitTransfer = submitTransfer;
+
+window.submitRefund = submitRefund;
+
+window.submitRenew = submitRenew;
+
+window.saveAddClass = saveAddClass;
+
+window.saveEditClass = saveEditClass;
+
+window.saveSchedule = saveSchedule;
+
+window.submitFixAttendance = submitFixAttendance;
+
+window.submitManualConsumption = submitManualConsumption;
+
+window.toggleAllAssign = toggleAllAssign;
+
+window.submitAssign = submitAssign;
+
+window.toggleMakeupClass = toggleMakeupClass;
+
+window.fillScheduleFromClass = fillScheduleFromClass;
+
+window.setAttToday = setAttToday;
+
+
+
+init();
+
+</script>
+
+</body>
+
+</html>
+
